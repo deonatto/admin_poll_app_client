@@ -1,0 +1,25 @@
+.navbar-container {
+  position: static;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.7rem;
+}
+
+.left-navbar,
+.right-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.right-navbar {
+  gap: 1.5rem;
+}
+
+.navbar-img-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
