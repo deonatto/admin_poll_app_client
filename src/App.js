@@ -1,3 +1,4 @@
+import { CssBaseline } from "@mui/material";
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import Home from "scenes/home/Home";
 import Login from "scenes/login/Login";
@@ -7,10 +8,11 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
+        <CssBaseline />
         <Routes>
-          <Route path="/" element={Login} />
-          <Route path="/home" element={Home} />
-          <Route path="/profile/:id" element={Profile} />
+          <Route path="/" element={<Login />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/profile/:id" element={<Profile />} />
         </Routes>
       </BrowserRouter>
     </div>
