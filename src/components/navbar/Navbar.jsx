@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import "./Navbar.css";
 import {
   Menu as MenuIcon,
-  HouseOutlined,
   ArrowDropDownOutlined,
   AccountCircleRounded,
+  SettingsOutlined
 } from "@mui/icons-material";
-import { Button, IconButton, InputBase, Menu, MenuItem } from "@mui/material";
+import { Button, IconButton, Menu, MenuItem } from "@mui/material";
 import { colorTokens } from "theme";
 
-const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
+const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const isOpen = Boolean(anchorEl);
 
@@ -22,15 +22,17 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
   return (
     <div
       className="navbar-container"
-      style={{ backgroundColor: colorTokens.grey[0] }}
+      style={{ backgroundColor: colorTokens.primary[100] }}
     >
       <div className="left-navbar">
         <IconButton onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-          <MenuIcon sx={{ color: "white" }} />
+          <MenuIcon sx={{ color: colorTokens.grey[500] }} />
         </IconButton>
-        <h2 style={{ marginLeft: "5px" }}>Voting App</h2>
       </div>
       <div className="right-navbar">
+        <IconButton>
+          <SettingsOutlined style={{ fontSize: "25px", color: colorTokens.grey[500] }} />
+        </IconButton>
         <div className="navbar-img-container">
           <Button
             onClick={clickhandler}
@@ -39,11 +41,11 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
               justifyContent: "space-between",
               alignItems: "center",
               textTransform: "none",
-              gap: "1rem",
+              gap: "0.2rem",
             }}
           >
-            <AccountCircleRounded />
-            <ArrowDropDownOutlined sx={{ fontSize: "30px", color: "white" }} />
+            <AccountCircleRounded sx={{ fontSize: "50px", color: colorTokens.grey[400] }}/>
+            <ArrowDropDownOutlined sx={{ fontSize: "30px", color: colorTokens.grey[500] }} />
           </Button>
           <Menu
             anchorEl={anchorEl}
