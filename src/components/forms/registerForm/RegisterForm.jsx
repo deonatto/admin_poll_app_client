@@ -12,18 +12,17 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import "./RegisterForm.css";
 import { colorTokens } from "theme";
-import { ColorizeSharp } from "@mui/icons-material";
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
-  const [repeatPassword, setRepeatPassword] = useState("");
   const [credentials, setCredentials] = useState({
     firstName: "",
     lastName: "",
     email: "",
     role: "admin",
     password: "",
+    repeatPassword: "",
   });
   const changeHandler = (credentialName, e) => {
     setCredentials((prevCredentials) => ({
@@ -34,6 +33,27 @@ const RegisterForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(credentials);
+  };
+
+  const buttonIsDisabled = () => {
+    return !(
+      nameIsValid(credentials.firstName) &&
+      nameIsValid(credentials.lastName) &&
+      emailIsValid(credentials.email) &&
+      passwordIsValid(credentials.password) &&
+      credentials.password === credentials.repeatPassword
+    );
+  };
+  const nameIsValid = (name) => {
+    const regName = /\d/;
+    const hasNumbers = regName.test(name);
+    return !hasNumbers && name.length >= 2;
+  };
+  const emailIsValid = (email) => {
+    return email.includes("@") && email.length > 8;
+  };
+  const passwordIsValid = (password) => {
+    return password.length > 5;
   };
   return (
     <form className="register-form-container" onSubmit={handleSubmit}>
@@ -49,23 +69,41 @@ const RegisterForm = () => {
           }}
         >
           <TextField
+            error={
+              credentials.firstName
+                ? !nameIsValid(credentials.firstName)
+                : false
+            }
+            required
             label="First Name"
+            value={credentials.firstName}
             onChange={(e) => changeHandler("firstName", e)}
             sx={{
               flex: 1,
             }}
           />
           <TextField
+            error={
+              credentials.lastName ? !nameIsValid(credentials.lastName) : false
+            }
+            required
             label="Last Name"
+            value={credentials.lastName}
             onChange={(e) => changeHandler("lastName", e)}
             sx={{
               flex: 1,
             }}
           />
         </div>
-        <TextField label="Email" onChange={(e) => changeHandler("email", e)} />
+        <TextField
+          error={credentials.email ? !emailIsValid(credentials.email) : false}
+          required
+          label="Email"
+          value={credentials.email}
+          onChange={(e) => changeHandler("email", e)}
+        />
         <FormControl variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password">
+          <InputLabel required htmlFor="outlined-adornment-password">
             Password
           </InputLabel>
           <OutlinedInput
@@ -83,11 +121,17 @@ const RegisterForm = () => {
               </InputAdornment>
             }
             onChange={(e) => changeHandler("password", e)}
+            value={credentials.password}
+            error={
+              credentials.password
+                ? !passwordIsValid(credentials.password)
+                : false
+            }
             label="Password"
           />
         </FormControl>
         <FormControl variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-repeat-password">
+          <InputLabel required htmlFor="outlined-adornment-repeat-password">
             Repeat Password
           </InputLabel>
           <OutlinedInput
@@ -104,10 +148,14 @@ const RegisterForm = () => {
                 </IconButton>
               </InputAdornment>
             }
-            onChange={(e) => setRepeatPassword(e.target.value)}
+            onChange={(e) => changeHandler("repeatPassword", e)}
             error={
-              repeatPassword ? repeatPassword !== credentials.password : false
+              credentials.repeatPassword
+                ? credentials.repeatPassword !== credentials.password
+                : false
             }
+            value={credentials.repeatPassword}
+            required
             label="Repeat Password"
           />
         </FormControl>
@@ -116,7 +164,7 @@ const RegisterForm = () => {
             fullWidth
             type="submit"
             sx={{
-              fontWeight: 'bold',
+              fontWeight: "bold",
               margin: "10px 0",
               padding: "1rem",
               backgroundColor: colorTokens.primary[500],
@@ -126,6 +174,7 @@ const RegisterForm = () => {
                 color: colorTokens.grey[0],
               },
             }}
+            disabled={buttonIsDisabled()}
           >
             Register
           </Button>
