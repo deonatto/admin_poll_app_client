@@ -1,8 +1,8 @@
 html,
 body,
 #root,
-.app {
+.App {
   height: 100%;
   width: 100%;
-  background-color: #E0E0E0;
+  background-color: #e7e5e5;
 }
