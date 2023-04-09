@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import {
   Button,
   TextField,
@@ -14,6 +15,8 @@ import "./RegisterForm.css";
 import { colorTokens } from "theme";
 
 const RegisterForm = () => {
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const [credentials, setCredentials] = useState({
@@ -30,9 +33,22 @@ const RegisterForm = () => {
       [credentialName]: e.target.value,
     }));
   };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(credentials);
+  const handleSubmit = async (e) => {
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/auth/register`,
+        credentials
+      );
+      setMessage(res.data.message);
+      setTimeout(() => {
+        setMessage("");
+      }, "3000");
+    } catch (err) {
+      setError(err.message);
+      setTimeout(() => {
+        setError("");
+      }, "3000");
+    }
   };
 
   const buttonIsDisabled = () => {
@@ -56,7 +72,13 @@ const RegisterForm = () => {
     return password.length > 5;
   };
   return (
-    <form className="register-form-container" onSubmit={handleSubmit}>
+    <form className="register-form-container">
+      {error && <h3 style={{ color: "red", textAlign: "center" }}>{error}</h3>}
+      {message && (
+        <h3 style={{ color: colorTokens.primary[500], textAlign: "center" }}>
+          {message}
+        </h3>
+      )}
       <h4 style={{ textDecoration: "none" }}>
         Welcome, create your admin account and start creating polls.
       </h4>
@@ -162,7 +184,7 @@ const RegisterForm = () => {
         <div>
           <Button
             fullWidth
-            type="submit"
+            onClick={handleSubmit}
             sx={{
               fontWeight: "bold",
               margin: "10px 0",
