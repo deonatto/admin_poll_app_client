@@ -1,11 +1,13 @@
 import { CssBaseline } from "@mui/material";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import Home from "scenes/home/Home";
 import Login from "scenes/login/Login";
 import Profile from "scenes/profile/Profile";
 import Layout from "scenes/layout/Layout";
 
 function App() {
+  const isAuth = useSelector((state) => state.auth.token);
   return (
     <div className="App">
       <BrowserRouter>
@@ -13,8 +15,14 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route element={<Layout />}>
-            <Route path="/home" element={<Home />} />
-            <Route path="/profile/:id" element={<Profile />} />
+            <Route
+              path="/home"
+              element={!!isAuth ? <Home /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/profile/:id"
+              element={!!isAuth ? <Profile /> : <Navigate to="/" />}
+            />
           </Route>
         </Routes>
       </BrowserRouter>

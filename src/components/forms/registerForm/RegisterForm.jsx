@@ -33,7 +33,7 @@ const RegisterForm = () => {
       [credentialName]: e.target.value,
     }));
   };
-  const handleSubmit = async (e) => {
+  const handleSubmit = async () => {
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/auth/register`,
@@ -44,7 +44,7 @@ const RegisterForm = () => {
         setMessage("");
       }, "3000");
     } catch (err) {
-      setError(err.message);
+      setError(err.response.data.message);
       setTimeout(() => {
         setError("");
       }, "3000");

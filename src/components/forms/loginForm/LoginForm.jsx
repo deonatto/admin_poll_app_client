@@ -9,12 +9,17 @@ import {
   IconButton,
   InputLabel,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import "./LoginForm.css";
 import { colorTokens } from "theme";
+import { setLogin } from "state/auth";
+import "./LoginForm.css";
 
 const LoginForm = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [credentials, setCredentials] = useState({
@@ -27,16 +32,21 @@ const LoginForm = () => {
       [credentialName]: e.target.value,
     }));
   };
-  const handleSubmit = async (e) => {
+  const handleSubmit = async () => {
     try {
-      /*
       const res = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/auth/register`,
+        `${process.env.REACT_APP_BASE_URL}/auth/login`,
         credentials
       );
-      */
+      dispatch(
+        setLogin({
+          user: res.data.user,
+          token: res.data.token,
+        })
+      );
+      navigate("/home");
     } catch (err) {
-      setError(err.message);
+      setError(err.response.data.message);
       setTimeout(() => {
         setError("");
       }, "3000");
@@ -55,7 +65,7 @@ const LoginForm = () => {
     return password.length > 5;
   };
   return (
-    <form className="register-form-container">
+    <form className="login-form-container">
       {error && <h3 style={{ color: "red", textAlign: "center" }}>{error}</h3>}
       <h4 style={{ textDecoration: "none" }}>
         Login into your account and start creating poll events.
