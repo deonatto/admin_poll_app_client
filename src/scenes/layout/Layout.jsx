@@ -13,7 +13,7 @@ const Layout = () => {
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
       />
-      <div style={{ flexGrow: 1 }}>
+      <div style={{ width: "calc(100% - 220px)" }}>
         <Navbar
           isSidebarOpen={isSidebarOpen}
           setIsSidebarOpen={setIsSidebarOpen}
