@@ -3,7 +3,8 @@ import axios from "axios";
 import { DataGrid } from "@mui/x-data-grid";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
+import Toolbar from "components/toolbar/Toolbar";
+import { colorTokens } from "theme";
 const Home = () => {
   const token = useSelector((state) => state.auth.token);
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ const Home = () => {
     sortType: "",
   });
   const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
     const getAllUsers = async () => {
@@ -32,10 +34,10 @@ const Home = () => {
             },
           }
         );
-        //console.log(res);
-        //setData(res.data);
+        setData(res.data);
       } catch (err) {
         console.log(err);
+        setError(err.response ? err.response.data.message : err.message);
       } finally {
         setIsLoading(false);
       }
@@ -50,24 +52,28 @@ const Home = () => {
       flex: 1,
     },
     {
-      field: "userId",
+      field: "firstName",
       headerName: "First Name",
       flex: 1,
     },
     {
-      field: "createdAt",
+      field: "lastName",
       headerName: "Last Name",
       flex: 1,
     },
     {
-      field: "products",
-      headerName: "# of Products",
+      field: "email",
+      headerName: "Email",
       flex: 1,
-      sortable: false,
     },
     {
-      field: "cost",
-      headerName: "Cost",
+      field: "role",
+      headerName: "Role",
+      flex: 1,
+    },
+    {
+      field: "createdAt",
+      headerName: "CreatedAt",
       flex: 1,
     },
   ];
@@ -88,22 +94,33 @@ const Home = () => {
   };
   return (
     <div style={{ padding: "1rem 1rem" }}>
-      <div style={{ marginTop: "40px", height: "80vh" }}>
-        <DataGrid
-          loading={isLoading}
-          getRowId={(row) => row._id}
-          rows={(data && data.transactions) || []}
-          columns={columns}
-          rowCount={(data && data.total) || 0}
-          pageSizeOptions={[20, 50, 100]}
-          pagination
-          paginationModel={paginationModel}
-          paginationMode="server"
-          sortingMode="server"
-          onPaginationModelChange={setPaginationModel}
-          onSortModelChange={(newSortModel) => sortHandler(newSortModel)}
-        />
-      </div>
+      {error ? (
+        error
+      ) : (
+        <div style={{ marginTop: "40px", height: "80vh" }}>
+          <DataGrid
+            loading={isLoading}
+            getRowId={(row) => row._id}
+            rows={(data && data.users) || []}
+            columns={columns}
+            rowCount={(data && data.total) || 0}
+            pageSizeOptions={[20, 50, 100]}
+            pagination
+            paginationModel={paginationModel}
+            paginationMode="server"
+            sortingMode="server"
+            onPaginationModelChange={setPaginationModel}
+            onSortModelChange={(newSortModel) => sortHandler(newSortModel)}
+            sx={{
+              background: colorTokens.primary[50],
+            }}
+            components={{ Toolbar }}
+            componentsProps={{
+              toolbar: { searchInput, setSearchInput, setSearch },
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };
