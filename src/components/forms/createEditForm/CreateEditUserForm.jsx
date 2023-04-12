@@ -14,9 +14,15 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import "./CreateEditUserForm.css";
 import { colorTokens } from "theme";
 
-const CreateEditUserForm = (isEdit = false, isRegister = false) => {
+const CreateEditUserForm = ({
+  isEdit = false,
+  isRegister = false,
+  token,
+  userId,
+}) => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [isEditingPasswords, setIsEditingPasswords] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const [credentials, setCredentials] = useState({
@@ -28,10 +34,33 @@ const CreateEditUserForm = (isEdit = false, isRegister = false) => {
     repeatPassword: "",
   });
   useEffect(() => {
+    const getUser = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_BASE_URL}/user/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(res);
+        setCredentials((prevCredentials) => ({
+          ...prevCredentials,
+          ...res.data,
+        }));
+      } catch (err) {
+        setError(err.response.data.message);
+        setTimeout(() => {
+          setError("");
+        }, "3000");
+      }
+    };
     if (isEdit) {
-      console.log("im edit");
+      getUser();
     }
-  }, [isEdit]);
+  }, [isEdit, token, userId]);
+
   const changeHandler = (credentialName, e) => {
     setCredentials((prevCredentials) => ({
       ...prevCredentials,
@@ -42,12 +71,13 @@ const CreateEditUserForm = (isEdit = false, isRegister = false) => {
     try {
       let res;
       if (isRegister) {
+        console.log("im register");
         res = await axios.post(
           `${process.env.REACT_APP_BASE_URL}/auth/register`,
           credentials
         );
-      }else{
-        
+      } else {
+        console.log("im create - edit");
       }
       setMessage(res.data.message);
       setTimeout(() => {
@@ -136,63 +166,81 @@ const CreateEditUserForm = (isEdit = false, isRegister = false) => {
           value={credentials.email}
           onChange={(e) => changeHandler("email", e)}
         />
-        <FormControl variant="outlined">
-          <InputLabel required htmlFor="outlined-adornment-password">
-            Password
-          </InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-password"
-            type={showPassword ? "text" : "password"}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={() => setShowPassword(!showPassword)}
-                  edge="end"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-            onChange={(e) => changeHandler("password", e)}
-            value={credentials.password}
-            error={
-              credentials.password
-                ? !passwordIsValid(credentials.password)
-                : false
-            }
-            label="Password"
-          />
-        </FormControl>
-        <FormControl variant="outlined">
-          <InputLabel required htmlFor="outlined-adornment-repeat-password">
-            Repeat Password
-          </InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-repeat-password"
-            type={showRepeatPassword ? "text" : "password"}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={() => setShowRepeatPassword(!showRepeatPassword)}
-                  edge="end"
-                >
-                  {showRepeatPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-            onChange={(e) => changeHandler("repeatPassword", e)}
-            error={
-              credentials.repeatPassword
-                ? credentials.repeatPassword !== credentials.password
-                : false
-            }
-            value={credentials.repeatPassword}
-            required
-            label="Repeat Password"
-          />
-        </FormControl>
+        <TextField
+          disabled={true}
+          required
+          label="Role"
+          value={credentials.role}
+        />
+        {(isRegister || isEditingPasswords) && (
+          <FormControl variant="outlined">
+            <InputLabel required htmlFor="outlined-adornment-password">
+              Password
+            </InputLabel>
+            <OutlinedInput
+              id="outlined-adornment-password"
+              type={showPassword ? "text" : "password"}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              onChange={(e) => changeHandler("password", e)}
+              value={credentials.password}
+              error={
+                credentials.password
+                  ? !passwordIsValid(credentials.password)
+                  : false
+              }
+              label="Password"
+            />
+          </FormControl>
+        )}
+        {(isRegister || isEditingPasswords) && (
+          <FormControl variant="outlined">
+            <InputLabel required htmlFor="outlined-adornment-repeat-password">
+              Repeat Password
+            </InputLabel>
+            <OutlinedInput
+              id="outlined-adornment-repeat-password"
+              type={showRepeatPassword ? "text" : "password"}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowRepeatPassword(!showRepeatPassword)}
+                    edge="end"
+                  >
+                    {showRepeatPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              onChange={(e) => changeHandler("repeatPassword", e)}
+              error={
+                credentials.repeatPassword
+                  ? credentials.repeatPassword !== credentials.password
+                  : false
+              }
+              value={credentials.repeatPassword}
+              required
+              label="Repeat Password"
+            />
+          </FormControl>
+        )}
+        {!isRegister && (
+          <p
+            className="edit-passwords-msg"
+            onClick={() => setIsEditingPasswords(!isEditingPasswords)}
+          >
+            Edit password ?
+          </p>
+        )}
         <div>
           <Button
             fullWidth

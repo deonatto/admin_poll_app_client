@@ -7,10 +7,10 @@ import "./CreateEditUser.css";
 const CreateEditUser = () => {
   const [user, setUser] = useState(null);
   const { id } = useParams();
-  const token = useSelector((state) => state.token);
+  const token = useSelector((state) => state.auth.token);
   return (
     <div className="create-edit-user-container">
-      <CreateEditUserForm isEdit={!!id} />
+      <CreateEditUserForm isEdit={!!id} token={token} userId={id} />
     </div>
   );
 };

@@ -10,3 +10,9 @@
   flex-direction: column;
   gap: 1.8rem;
 }
+.edit-passwords-msg{
+  text-align: end;
+  margin: 0;
+  color: rgb(52, 52, 187);
+  
+}
