@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Button,
@@ -11,10 +11,10 @@ import {
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import "./RegisterForm.css";
+import "./CreateEditUserForm.css";
 import { colorTokens } from "theme";
 
-const RegisterForm = () => {
+const CreateEditUserForm = (isEdit = false, isRegister = false) => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -27,6 +27,11 @@ const RegisterForm = () => {
     password: "",
     repeatPassword: "",
   });
+  useEffect(() => {
+    if (isEdit) {
+      console.log("im edit");
+    }
+  }, [isEdit]);
   const changeHandler = (credentialName, e) => {
     setCredentials((prevCredentials) => ({
       ...prevCredentials,
@@ -35,10 +40,15 @@ const RegisterForm = () => {
   };
   const handleSubmit = async () => {
     try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/auth/register`,
-        credentials
-      );
+      let res;
+      if (isRegister) {
+        res = await axios.post(
+          `${process.env.REACT_APP_BASE_URL}/auth/register`,
+          credentials
+        );
+      }else{
+        
+      }
       setMessage(res.data.message);
       setTimeout(() => {
         setMessage("");
@@ -72,17 +82,19 @@ const RegisterForm = () => {
     return password.length > 5;
   };
   return (
-    <form className="register-form-container">
+    <form className="create-edit-form-container">
       {error && <h3 style={{ color: "red", textAlign: "center" }}>{error}</h3>}
       {message && (
         <h3 style={{ color: colorTokens.primary[500], textAlign: "center" }}>
           {message}
         </h3>
       )}
-      <h4 style={{ textDecoration: "none" }}>
-        Welcome, create your admin account and start creating polls.
-      </h4>
-      <div className="register-container">
+      {!isEdit && (
+        <h4 style={{ textDecoration: "none" }}>
+          Welcome, create your admin account and start creating polls.
+        </h4>
+      )}
+      <div className="create-edit-container">
         <div
           style={{
             display: "flex",
@@ -206,4 +218,4 @@ const RegisterForm = () => {
   );
 };
 
-export default RegisterForm;
+export default CreateEditUserForm;

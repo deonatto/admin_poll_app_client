@@ -44,7 +44,7 @@ const LoginForm = () => {
           token: res.data.token,
         })
       );
-      navigate("/home");
+      navigate("/users");
     } catch (err) {
       setError(err.response.data.message);
       setTimeout(() => {

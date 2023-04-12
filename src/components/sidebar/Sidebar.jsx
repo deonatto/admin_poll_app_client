@@ -24,7 +24,7 @@ import { colorTokens } from "theme";
 
 const navItems = [
   { text: "User Management", icon: null },
-  { text: "Home", icon: <ShoppingCartOutlined /> },
+  { text: "Users", icon: <Groups2Outlined /> },
   { text: "Customers", icon: <Groups2Outlined /> },
   { text: "Transactions", icon: <ReceiptLongOutlined /> },
   { text: "Geography", icon: <PublicOutlined /> },

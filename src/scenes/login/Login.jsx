@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Login.css";
-import RegisterForm from "components/forms/registerForm/RegisterForm";
+import CreateEditUserForm from "components/forms/createEditForm/CreateEditUserForm";
 import LoginForm from "components/forms/loginForm/LoginForm";
 import { colorTokens } from "theme";
 
@@ -16,7 +16,7 @@ const Login = () => {
         <h1 style={{ color: colorTokens.grey[0] }}>Admin Votin App</h1>
       </div>
       <div className="form-container">
-        {isLogin ? <LoginForm /> : <RegisterForm />}
+        {isLogin ? <LoginForm /> : <CreateEditUserForm isRegister={true}/>}
         <h4 onClick={() => setIsLogin(!isLogin)}>
           {isLogin
             ? "Don´t have an account? Click here."

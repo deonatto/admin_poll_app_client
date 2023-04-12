@@ -5,6 +5,11 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Toolbar from "components/toolbar/Toolbar";
 import { colorTokens } from "theme";
+import ErrorMessage from "components/errorMessage/ErrorMessage";
+import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 const Home = () => {
   const token = useSelector((state) => state.auth.token);
   const navigate = useNavigate();
@@ -76,6 +81,33 @@ const Home = () => {
       headerName: "CreatedAt",
       flex: 1,
     },
+    {
+      field: "actions",
+      headerName: "Actions",
+      flex: 0.2,
+      sortable: false,
+      minWidth: 100,
+      renderCell: (params) => {
+        const handleEdit = () => {
+          navigate(`/user/${params.id}`);
+        };
+
+        const handleDelete = () => {
+          console.log(params);
+        };
+
+        return (
+          <div>
+            <IconButton onClick={handleEdit} color="primary">
+              <EditIcon />
+            </IconButton>
+            <IconButton onClick={handleDelete} color="secondary">
+              <DeleteIcon />
+            </IconButton>
+          </div>
+        );
+      },
+    },
   ];
   const sortHandler = (sortModel) => {
     if (sortModel.length > 0) {
@@ -95,7 +127,7 @@ const Home = () => {
   return (
     <div style={{ padding: "1rem 1rem" }}>
       {error ? (
-        error
+        <ErrorMessage message={error} />
       ) : (
         <div style={{ marginTop: "40px", height: "80vh" }}>
           <DataGrid
