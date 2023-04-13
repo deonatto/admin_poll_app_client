@@ -28,6 +28,10 @@ function App() {
               path="/user/:id"
               element={!!isAuth ? <CreateEditUser /> : <Navigate to="/" />}
             />
+            <Route
+              path="/user/"
+              element={!!isAuth ? <CreateEditUser /> : <Navigate to="/" />}
+            />
           </Route>
         </Routes>
       </BrowserRouter>

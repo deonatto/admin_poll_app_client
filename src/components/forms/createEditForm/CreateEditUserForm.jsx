@@ -14,11 +14,22 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import "./CreateEditUserForm.css";
 import { colorTokens } from "theme";
 
+/**
+ * CreateEditUserForm Component
+ *
+ * @param {bool} isEdit - Determines if the form is in edit mode.
+ * @param {bool} isRegister - Determines if the form is in registration mode.
+ * @param {string} token - JWT token for authentication.
+ * @param {string} userId - User ID for editing user details.
+ * @param {string} btnName - Label for the form submission button.
+ */
+
 const CreateEditUserForm = ({
   isEdit = false,
   isRegister = false,
   token,
   userId,
+  btnName,
 }) => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -33,6 +44,7 @@ const CreateEditUserForm = ({
     password: "",
     repeatPassword: "",
   });
+  // Fetch user details from API  for editing
   useEffect(() => {
     const getUser = async () => {
       try {
@@ -71,7 +83,6 @@ const CreateEditUserForm = ({
     try {
       let res;
       if (isRegister) {
-        console.log("im register");
         res = await axios.post(
           `${process.env.REACT_APP_BASE_URL}/auth/register`,
           credentials
@@ -92,13 +103,18 @@ const CreateEditUserForm = ({
   };
 
   const buttonIsDisabled = () => {
-    return !(
+    const namesValidation =
       nameIsValid(credentials.firstName) &&
       nameIsValid(credentials.lastName) &&
-      emailIsValid(credentials.email) &&
-      passwordIsValid(credentials.password) &&
-      credentials.password === credentials.repeatPassword
-    );
+      emailIsValid(credentials.email);
+    if (isEditingPasswords) {
+      return !(
+        namesValidation &&
+        passwordIsValid(credentials.password) &&
+        credentials.password === credentials.repeatPassword
+      );
+    }
+    return !namesValidation;
   };
   const nameIsValid = (name) => {
     const regName = /\d/;
@@ -172,7 +188,7 @@ const CreateEditUserForm = ({
           label="Role"
           value={credentials.role}
         />
-        {(isRegister || isEditingPasswords) && (
+        {(!isEdit || isEditingPasswords) && (
           <FormControl variant="outlined">
             <InputLabel required htmlFor="outlined-adornment-password">
               Password
@@ -202,7 +218,7 @@ const CreateEditUserForm = ({
             />
           </FormControl>
         )}
-        {(isRegister || isEditingPasswords) && (
+        {(!isEdit || isEditingPasswords) && (
           <FormControl variant="outlined">
             <InputLabel required htmlFor="outlined-adornment-repeat-password">
               Repeat Password
@@ -233,7 +249,7 @@ const CreateEditUserForm = ({
             />
           </FormControl>
         )}
-        {!isRegister && (
+        {isEdit && (
           <p
             className="edit-passwords-msg"
             onClick={() => setIsEditingPasswords(!isEditingPasswords)}
@@ -258,7 +274,7 @@ const CreateEditUserForm = ({
             }}
             disabled={buttonIsDisabled()}
           >
-            Register
+            {btnName}
           </Button>
         </div>
       </div>

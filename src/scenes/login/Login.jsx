@@ -16,7 +16,7 @@ const Login = () => {
         <h1 style={{ color: colorTokens.grey[0] }}>Admin Votin App</h1>
       </div>
       <div className="form-container">
-        {isLogin ? <LoginForm /> : <CreateEditUserForm isRegister={true}/>}
+        {isLogin ? <LoginForm /> : <CreateEditUserForm btnName="Register" isRegister={true}/>}
         <h4 onClick={() => setIsLogin(!isLogin)}>
           {isLogin
             ? "Don´t have an account? Click here."

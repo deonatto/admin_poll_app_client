@@ -10,7 +10,12 @@ const CreateEditUser = () => {
   const token = useSelector((state) => state.auth.token);
   return (
     <div className="create-edit-user-container">
-      <CreateEditUserForm isEdit={!!id} token={token} userId={id} />
+      <CreateEditUserForm
+        isEdit={!!id}
+        token={token}
+        userId={id}
+        btnName="Save"
+      />
     </div>
   );
 };

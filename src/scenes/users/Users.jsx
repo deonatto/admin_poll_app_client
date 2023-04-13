@@ -27,6 +27,7 @@ const Home = () => {
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
 
+  // Fetch all users
   useEffect(() => {
     const getAllUsers = async () => {
       setIsLoading(true);
@@ -49,7 +50,7 @@ const Home = () => {
     };
     getAllUsers();
   }, [paginationModel, sort, search, token]);
-  //table headers
+  // Defining table columns
   const columns = [
     {
       field: "_id",
@@ -109,6 +110,7 @@ const Home = () => {
       },
     },
   ];
+  // Handler function for sorting
   const sortHandler = (sortModel) => {
     if (sortModel.length > 0) {
       setSort((prevState) => ({
