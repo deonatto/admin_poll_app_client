@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import {
   Button,
@@ -36,14 +36,17 @@ const CreateEditUserForm = ({
   const [isEditingPasswords, setIsEditingPasswords] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
+  const [repeatPassword, setRepeatPassword] = useState("");
   const [credentials, setCredentials] = useState({
     firstName: "",
     lastName: "",
     email: "",
     role: "admin",
     password: "",
-    repeatPassword: "",
   });
+  const headers = useMemo(() => {
+    return { Authorization: `Bearer ${token}` };
+  }, [token]);
   // Fetch user details from API  for editing
   useEffect(() => {
     const getUser = async () => {
@@ -51,12 +54,9 @@ const CreateEditUserForm = ({
         const res = await axios.get(
           `${process.env.REACT_APP_BASE_URL}/user/${userId}`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers,
           }
         );
-        console.log(res);
         setCredentials((prevCredentials) => ({
           ...prevCredentials,
           ...res.data,
@@ -71,7 +71,7 @@ const CreateEditUserForm = ({
     if (isEdit) {
       getUser();
     }
-  }, [isEdit, token, userId]);
+  }, [isEdit, token, userId, headers]);
 
   const changeHandler = (credentialName, e) => {
     setCredentials((prevCredentials) => ({
@@ -88,7 +88,20 @@ const CreateEditUserForm = ({
           credentials
         );
       } else {
-        console.log("im create - edit");
+        const link = isEdit
+          ? `${process.env.REACT_APP_BASE_URL}/user/${userId}`
+          : `${process.env.REACT_APP_BASE_URL}/user`;
+        if (isEdit) {
+          //check if password are empty, if they are, send credentials without passwords
+          res = await axios.put(link, credentials, {
+            headers,
+          });
+        } else {
+          res = await axios.post(link, credentials, {
+            headers,
+          });
+        }
+        console.log(res);
       }
       setMessage(res.data.message);
       setTimeout(() => {
@@ -111,7 +124,7 @@ const CreateEditUserForm = ({
       return !(
         namesValidation &&
         passwordIsValid(credentials.password) &&
-        credentials.password === credentials.repeatPassword
+        credentials.password === repeatPassword
       );
     }
     return !namesValidation;
@@ -237,13 +250,11 @@ const CreateEditUserForm = ({
                   </IconButton>
                 </InputAdornment>
               }
-              onChange={(e) => changeHandler("repeatPassword", e)}
+              onChange={(e) => setRepeatPassword(e.target.value)}
               error={
-                credentials.repeatPassword
-                  ? credentials.repeatPassword !== credentials.password
-                  : false
+                repeatPassword ? repeatPassword !== credentials.password : false
               }
-              value={credentials.repeatPassword}
+              value={repeatPassword}
               required
               label="Repeat Password"
             />
