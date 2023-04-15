@@ -36,12 +36,12 @@ const CreateEditUserForm = ({
   const [isEditingPasswords, setIsEditingPasswords] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
-  const [repeatPassword, setRepeatPassword] = useState("");
+  const [repeatedPassword, setRepeatedPassword] = useState("");
   const [credentials, setCredentials] = useState({
     firstName: "",
     lastName: "",
     email: "",
-    role: "admin",
+    role: isRegister ? "admin" : "user",
     password: "",
   });
   const headers = useMemo(() => {
@@ -79,7 +79,7 @@ const CreateEditUserForm = ({
       [credentialName]: e.target.value,
     }));
   };
-  const handleSubmit = async () => {
+  const submitHandler = async () => {
     try {
       let res;
       if (isRegister) {
@@ -96,10 +96,13 @@ const CreateEditUserForm = ({
           res = await axios.put(link, credentials, {
             headers,
           });
+          resetCredentials(res.data.user);
+          isEditingPasswords && setIsEditingPasswords(!isEditingPasswords);
         } else {
           res = await axios.post(link, credentials, {
             headers,
           });
+          resetCredentials();
         }
         console.log(res);
       }
@@ -120,11 +123,11 @@ const CreateEditUserForm = ({
       nameIsValid(credentials.firstName) &&
       nameIsValid(credentials.lastName) &&
       emailIsValid(credentials.email);
-    if (isEditingPasswords) {
+    if (isEditingPasswords || isRegister || !isEdit) {
       return !(
         namesValidation &&
         passwordIsValid(credentials.password) &&
-        credentials.password === repeatPassword
+        credentials.password === repeatedPassword
       );
     }
     return !namesValidation;
@@ -139,6 +142,28 @@ const CreateEditUserForm = ({
   };
   const passwordIsValid = (password) => {
     return password.length > 5;
+  };
+
+  const resetCredentials = (credentials = null) => {
+    console.log(credentials);
+    if (credentials) {
+      setCredentials((prevState) => ({
+        ...prevState,
+        ...credentials,
+        password: "",
+      }));
+      setRepeatedPassword("");
+      return;
+    }
+    setCredentials((prevState) => ({
+      ...prevState,
+      firstName: "",
+      lastName: "",
+      email: "",
+      role: "user",
+      password: "",
+    }));
+    setRepeatedPassword("");
   };
   return (
     <form className="create-edit-form-container">
@@ -250,11 +275,13 @@ const CreateEditUserForm = ({
                   </IconButton>
                 </InputAdornment>
               }
-              onChange={(e) => setRepeatPassword(e.target.value)}
+              onChange={(e) => setRepeatedPassword(e.target.value)}
               error={
-                repeatPassword ? repeatPassword !== credentials.password : false
+                repeatedPassword
+                  ? repeatedPassword !== credentials.password
+                  : false
               }
-              value={repeatPassword}
+              value={repeatedPassword}
               required
               label="Repeat Password"
             />
@@ -271,7 +298,7 @@ const CreateEditUserForm = ({
         <div>
           <Button
             fullWidth
-            onClick={handleSubmit}
+            onClick={submitHandler}
             sx={{
               fontWeight: "bold",
               margin: "10px 0",
