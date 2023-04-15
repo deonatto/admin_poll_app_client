@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { DataGrid } from "@mui/x-data-grid";
 import { useSelector } from "react-redux";
@@ -27,6 +27,10 @@ const Home = () => {
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
 
+  const headers = useMemo(() => {
+    return { Authorization: `Bearer ${token}` };
+  }, [token]);
+
   // Fetch all users
   useEffect(() => {
     const getAllUsers = async () => {
@@ -35,21 +39,18 @@ const Home = () => {
         const res = await axios.get(
           `${process.env.REACT_APP_BASE_URL}/user/?page=${paginationModel.page}&pageSize=${paginationModel.pageSize}&sortField=${sort.field}&sort=${sort.sortType}&search=${search}`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers,
           }
         );
         setData(res.data);
       } catch (err) {
-        console.log(err);
         setError(err.response ? err.response.data.message : err.message);
       } finally {
         setIsLoading(false);
       }
     };
     getAllUsers();
-  }, [paginationModel, sort, search, token]);
+  }, [paginationModel, sort, search, token, headers]);
   // Defining table columns
   const columns = [
     {
@@ -89,20 +90,41 @@ const Home = () => {
       sortable: false,
       minWidth: 100,
       renderCell: (params) => {
-        const handleEdit = () => {
+        const editHandler = () => {
           navigate(`/user/${params.id}`);
         };
 
-        const handleDelete = () => {
-          console.log(params);
+        const deleteHandler = async () => {
+          setIsLoading(true);
+          try {
+            await axios.delete(
+              `${process.env.REACT_APP_BASE_URL}/user/${params.id}`,
+              {
+                headers,
+              }
+            );
+            // Filter out the deleted user from the current data state
+            const updatedData = data.users.filter(
+              (user) => user._id !== params.id
+            );
+            setData((prevState) => ({
+              ...prevState,
+              users: updatedData,
+              total: prevState.total - 1,
+            }));
+          } catch (err) {
+            setError(err.response ? err.response.data.message : err.message);
+          } finally {
+            setIsLoading(false);
+          }
         };
 
         return (
           <div>
-            <IconButton onClick={handleEdit} color="primary">
+            <IconButton onClick={editHandler} color="primary">
               <EditIcon />
             </IconButton>
-            <IconButton onClick={handleDelete} color="secondary">
+            <IconButton onClick={deleteHandler} color="secondary">
               <DeleteIcon />
             </IconButton>
           </div>

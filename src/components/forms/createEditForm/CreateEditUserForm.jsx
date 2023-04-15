@@ -47,6 +47,7 @@ const CreateEditUserForm = ({
   const headers = useMemo(() => {
     return { Authorization: `Bearer ${token}` };
   }, [token]);
+
   // Fetch user details from API  for editing
   useEffect(() => {
     const getUser = async () => {
@@ -79,6 +80,7 @@ const CreateEditUserForm = ({
       [credentialName]: e.target.value,
     }));
   };
+
   const submitHandler = async () => {
     try {
       let res;
@@ -97,14 +99,12 @@ const CreateEditUserForm = ({
             headers,
           });
           resetCredentials(res.data.user);
-          isEditingPasswords && setIsEditingPasswords(!isEditingPasswords);
         } else {
           res = await axios.post(link, credentials, {
             headers,
           });
           resetCredentials();
         }
-        console.log(res);
       }
       setMessage(res.data.message);
       setTimeout(() => {
@@ -132,20 +132,22 @@ const CreateEditUserForm = ({
     }
     return !namesValidation;
   };
+
   const nameIsValid = (name) => {
     const regName = /\d/;
     const hasNumbers = regName.test(name);
     return !hasNumbers && name.length >= 2;
   };
+
   const emailIsValid = (email) => {
     return email.includes("@") && email.length > 8;
   };
+
   const passwordIsValid = (password) => {
     return password.length > 5;
   };
 
   const resetCredentials = (credentials = null) => {
-    console.log(credentials);
     if (credentials) {
       setCredentials((prevState) => ({
         ...prevState,
@@ -153,6 +155,7 @@ const CreateEditUserForm = ({
         password: "",
       }));
       setRepeatedPassword("");
+      isEditingPasswords && setIsEditingPasswords(!isEditingPasswords);
       return;
     }
     setCredentials((prevState) => ({
@@ -165,6 +168,7 @@ const CreateEditUserForm = ({
     }));
     setRepeatedPassword("");
   };
+
   return (
     <form className="create-edit-form-container">
       {error && <h3 style={{ color: "red", textAlign: "center" }}>{error}</h3>}
@@ -174,9 +178,9 @@ const CreateEditUserForm = ({
         </h3>
       )}
       {!isEdit && (
-        <h4 style={{ textDecoration: "none" }}>
-          Welcome, create your admin account and start creating polls.
-        </h4>
+        <h3 style={{ textDecoration: "none", textAlign: "center" }}>
+          Welcome, create an account.
+        </h3>
       )}
       <div className="create-edit-container">
         <div
