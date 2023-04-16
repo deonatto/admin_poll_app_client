@@ -42,7 +42,6 @@ const Polls = () => {
             headers,
           }
         );
-        console.log(res);
         setData(res.data);
       } catch (err) {
         setError(err.response ? err.response.data.message : err.message);

@@ -7,6 +7,7 @@ import Profile from "scenes/profile/Profile";
 import Layout from "scenes/layout/Layout";
 import CreateEditUser from "scenes/createEditUser/CreateEditUser";
 import Polls from "scenes/polls/Polls";
+import CreateEditPoll from "scenes/createEditPoll/CreateEditPoll";
 
 function App() {
   const isAuth = useSelector((state) => state.auth.token);
@@ -32,6 +33,10 @@ function App() {
             <Route
               path="/polls"
               element={!!isAuth ? <Polls /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/poll/:id?"
+              element={!!isAuth ? <CreateEditPoll /> : <Navigate to="/" />}
             />
           </Route>
         </Routes>

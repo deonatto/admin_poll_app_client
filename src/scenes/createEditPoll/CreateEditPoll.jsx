@@ -1,21 +1,21 @@
-import CreateEditUserForm from "components/forms/createEditUserForm/CreateEditUserForm";
+import CreateEditPollForm from "components/forms/createEditPollForm/CreateEditPollForm";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import "./CreateEditUser.css";
+import "./CreateEditPoll.css";
 
-const CreateEditUser = () => {
+const CreateEditPoll = () => {
   const { id } = useParams();
   const token = useSelector((state) => state.auth.token);
   return (
-    <div className="create-edit-user-container">
-      <CreateEditUserForm
+    <div className="create-edit-poll-container">
+      <CreateEditPollForm
         isEdit={!!id}
         token={token}
-        userId={id}
+        pollId={id}
         btnName="Save"
       />
     </div>
   );
 };
 
-export default CreateEditUser;
+export default CreateEditPoll;
