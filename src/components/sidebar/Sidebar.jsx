@@ -10,14 +10,8 @@ import {
 } from "@mui/material";
 import {
   ChevronRightOutlined,
-  ShoppingCartOutlined,
   Groups2Outlined,
   ReceiptLongOutlined,
-  PublicOutlined,
-  TodayOutlined,
-  CalendarMonthOutlined,
-  AdminPanelSettingsOutlined,
-  PieChartOutline,
 } from "@mui/icons-material";
 import "./Sidebar.css";
 import { colorTokens } from "theme";
@@ -25,23 +19,11 @@ import { colorTokens } from "theme";
 const navItems = [
   { text: "User Management", icon: null },
   { text: "Users", icon: <Groups2Outlined /> },
-  { text: "Customers", icon: <Groups2Outlined /> },
-  { text: "Transactions", icon: <ReceiptLongOutlined /> },
-  { text: "Geography", icon: <PublicOutlined /> },
-  { text: "Sales", icon: null },
-  { text: "Daily", icon: <TodayOutlined /> },
-  { text: "Monthly", icon: <CalendarMonthOutlined /> },
-  { text: "Breakdown", icon: <PieChartOutline /> },
-  { text: "Dashboard", icon: null },
-  { text: "Admin", icon: <AdminPanelSettingsOutlined /> },
+  { text: "Poll Management", icon: null },
+  { text: "Polls", icon: <ReceiptLongOutlined /> },
 ];
 
-const Sidebar = ({
-  isNonMobile,
-  drawerWidth,
-  isSidebarOpen,
-  setIsSidebarOpen,
-}) => {
+const Sidebar = ({ drawerWidth, isSidebarOpen, setIsSidebarOpen }) => {
   const { pathname } = useLocation();
   const [active, setActive] = useState("");
   const navigate = useNavigate();

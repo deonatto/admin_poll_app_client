@@ -10,7 +10,13 @@ import {
 import { colorTokens } from "theme";
 import { useNavigate } from "react-router-dom";
 import "./Toolbar.css";
-const Toolbar = ({ searchInput, setSearchInput, setSearch }) => {
+const Toolbar = ({
+  searchInput,
+  setSearchInput,
+  setSearch,
+  tableType,
+  searchLabel,
+}) => {
   const navigate = useNavigate();
   return (
     <GridToolbarContainer>
@@ -22,7 +28,7 @@ const Toolbar = ({ searchInput, setSearchInput, setSearch }) => {
         </div>
         <div className="toolbar-btn-search-container">
           <Button
-            onClick={() => navigate("/user/")}
+            onClick={() => navigate(`/${tableType}/`)}
             fullWidth
             sx={{
               width: "100px",
@@ -36,10 +42,10 @@ const Toolbar = ({ searchInput, setSearchInput, setSearch }) => {
               },
             }}
           >
-            Add User
+            {`Add ${tableType}`}
           </Button>
           <TextField
-            label="Search by email..."
+            label={`Search by ${searchLabel}...`}
             sx={{ width: "17rem" }}
             onChange={(e) => setSearchInput(e.target.value)}
             value={searchInput}

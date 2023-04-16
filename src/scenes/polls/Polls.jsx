@@ -10,7 +10,7 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const Home = () => {
+const Polls = () => {
   const token = useSelector((state) => state.auth.token);
   const navigate = useNavigate();
   const [data, setData] = useState([]);
@@ -31,17 +31,18 @@ const Home = () => {
     return { Authorization: `Bearer ${token}` };
   }, [token]);
 
-  // Fetch all users
+  // Fetch all polls
   useEffect(() => {
     const getAllUsers = async () => {
       setIsLoading(true);
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/user/?page=${paginationModel.page}&pageSize=${paginationModel.pageSize}&sortField=${sort.field}&sort=${sort.sortType}&search=${search}`,
+          `${process.env.REACT_APP_BASE_URL}/poll/?page=${paginationModel.page}&pageSize=${paginationModel.pageSize}&sortField=${sort.field}&sort=${sort.sortType}&search=${search}`,
           {
             headers,
           }
         );
+        console.log(res);
         setData(res.data);
       } catch (err) {
         setError(err.response ? err.response.data.message : err.message);
@@ -59,23 +60,18 @@ const Home = () => {
       flex: 1,
     },
     {
-      field: "firstName",
-      headerName: "First Name",
+      field: "name",
+      headerName: "Poll Name",
       flex: 1,
     },
     {
-      field: "lastName",
-      headerName: "Last Name",
-      flex: 1,
+      field: "description",
+      headerName: "Description",
+      flex: 1.5,
     },
     {
-      field: "email",
-      headerName: "Email",
-      flex: 1,
-    },
-    {
-      field: "role",
-      headerName: "Role",
+      field: "active",
+      headerName: "Active",
       flex: 1,
     },
     {
@@ -91,25 +87,25 @@ const Home = () => {
       minWidth: 100,
       renderCell: (params) => {
         const editHandler = () => {
-          navigate(`/user/${params.id}`);
+          navigate(`/poll/${params.id}`);
         };
 
         const deleteHandler = async () => {
           setIsLoading(true);
           try {
             await axios.delete(
-              `${process.env.REACT_APP_BASE_URL}/user/${params.id}`,
+              `${process.env.REACT_APP_BASE_URL}/poll/${params.id}`,
               {
                 headers,
               }
             );
             // Filter out the deleted user from the current data state
-            const updatedData = data.users.filter(
+            const updatedData = data.polls.filter(
               (user) => user._id !== params.id
             );
             setData((prevState) => ({
               ...prevState,
-              users: updatedData,
+              polls: updatedData,
               total: prevState.total - 1,
             }));
           } catch (err) {
@@ -157,7 +153,7 @@ const Home = () => {
           <DataGrid
             loading={isLoading}
             getRowId={(row) => row._id}
-            rows={(data && data.users) || []}
+            rows={(data && data.polls) || []}
             columns={columns}
             rowCount={(data && data.total) || 0}
             pageSizeOptions={[20, 50, 100]}
@@ -176,8 +172,8 @@ const Home = () => {
                 searchInput,
                 setSearchInput,
                 setSearch,
-                tableType: "user",
-                searchLabel: "email",
+                tableType: "poll",
+                searchLabel: "name",
               },
             }}
           />
@@ -187,4 +183,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Polls;
