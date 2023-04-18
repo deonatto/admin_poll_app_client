@@ -9,11 +9,11 @@ const Layout = () => {
   return (
     <div className="layout-container">
       <Sidebar
-        drawerWidth="220px"
+        drawerWidth="250px"
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
       />
-      <div style={{ width: "calc(100% - 220px)" }}>
+      <div style={{ width: "calc(100% - 250px)" }}>
         <Navbar
           isSidebarOpen={isSidebarOpen}
           setIsSidebarOpen={setIsSidebarOpen}

@@ -21,6 +21,9 @@ const navItems = [
   { text: "Users", icon: <Groups2Outlined /> },
   { text: "Poll Management", icon: null },
   { text: "Polls", icon: <ReceiptLongOutlined /> },
+  { text: "Poll Options Management", icon: null },
+  { text: "Options", icon: <ReceiptLongOutlined /> },
+  
 ];
 
 const Sidebar = ({ drawerWidth, isSidebarOpen, setIsSidebarOpen }) => {

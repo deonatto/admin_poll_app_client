@@ -31,7 +31,7 @@ const Toolbar = ({
             onClick={() => navigate(`/${tableType}/`)}
             fullWidth
             sx={{
-              width: "100px",
+              width: "110px",
               fontWeight: "bold",
               padding: "0.5rem",
               backgroundColor: colorTokens.primary[600],
