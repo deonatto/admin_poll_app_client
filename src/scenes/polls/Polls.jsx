@@ -33,7 +33,7 @@ const Polls = () => {
 
   // Fetch all polls
   useEffect(() => {
-    const getAllUsers = async () => {
+    const getAllPolls = async () => {
       setIsLoading(true);
       try {
         const res = await axios.get(
@@ -49,7 +49,7 @@ const Polls = () => {
         setIsLoading(false);
       }
     };
-    getAllUsers();
+    getAllPolls();
   }, [paginationModel, sort, search, token, headers]);
   // Defining table columns
   const columns = [

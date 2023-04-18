@@ -25,8 +25,9 @@ const CreateEditOptionForm = ({ isEdit = false, token, optionId, btnName }) => {
   const [credentials, setCredentials] = useState({
     name: "",
     description: "",
-    active: true,
+    pollId: "",
   });
+  const [polls, setPolls] = useState([]);
   const headers = useMemo(() => {
     return { Authorization: `Bearer ${token}` };
   }, [token]);
@@ -36,7 +37,7 @@ const CreateEditOptionForm = ({ isEdit = false, token, optionId, btnName }) => {
     const getPollOption = async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/option/${optionId}`,
+          `${process.env.REACT_APP_BASE_URL}/pollOptions/${optionId}`,
           {
             headers,
           }
@@ -53,10 +54,27 @@ const CreateEditOptionForm = ({ isEdit = false, token, optionId, btnName }) => {
       }
     };
     if (isEdit) {
-        getPollOption();
+      getPollOption();
     }
   }, [isEdit, token, optionId, headers]);
 
+  // Fetch all polls
+  useEffect(() => {
+    const getAllPolls = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_BASE_URL}/poll/all`,
+          {
+            headers,
+          }
+        );
+        setPolls(res.data);
+      } catch (err) {
+        setError(err.response ? err.response.data.message : err.message);
+      }
+    };
+    getAllPolls();
+  }, [headers]);
   const changeHandler = (credentialName, e) => {
     setCredentials((prevCredentials) => ({
       ...prevCredentials,
@@ -68,8 +86,8 @@ const CreateEditOptionForm = ({ isEdit = false, token, optionId, btnName }) => {
     try {
       let res;
       const link = isEdit
-        ? `${process.env.REACT_APP_BASE_URL}/option/${optionId}`
-        : `${process.env.REACT_APP_BASE_URL}/option`;
+        ? `${process.env.REACT_APP_BASE_URL}/pollOptions/${optionId}`
+        : `${process.env.REACT_APP_BASE_URL}/pollOptions`;
       if (isEdit) {
         //check if password are empty, if they are, send credentials without passwords
         res = await axios.put(link, credentials, {
@@ -122,7 +140,7 @@ const CreateEditOptionForm = ({ isEdit = false, token, optionId, btnName }) => {
       ...prevState,
       name: "",
       description: "",
-      active: true,
+      pollId: "",
     }));
   };
 
@@ -143,7 +161,7 @@ const CreateEditOptionForm = ({ isEdit = false, token, optionId, btnName }) => {
         <TextField
           error={credentials.name ? !nameIsValid(credentials.name) : false}
           required
-          label="Poll Name"
+          label="Name"
           value={credentials.name}
           onChange={(e) => changeHandler("name", e)}
           sx={{
@@ -164,16 +182,20 @@ const CreateEditOptionForm = ({ isEdit = false, token, optionId, btnName }) => {
           onChange={(e) => changeHandler("description", e)}
         />
         <FormControl fullWidth>
-          <InputLabel id="select-label">Active</InputLabel>
+          <InputLabel id="select-label">Poll ID</InputLabel>
           <Select
+            placeholder="Select a poll"
             labelId="select-label"
             id="simple-select"
-            label="Active"
-            value={credentials.active}
-            onChange={(e) => changeHandler("active", e)}
+            label="Poll ID"
+            value={credentials.pollId}
+            onChange={(e) => changeHandler("pollId", e)}
           >
-            <MenuItem value={true}>YES</MenuItem>
-            <MenuItem value={false}>NO</MenuItem>
+            {polls.map((poll, index) => (
+              <MenuItem key={index} value={poll._id}>
+                {poll.name}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
         <div>
