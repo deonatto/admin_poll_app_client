@@ -37,7 +37,7 @@ const PollOptions = () => {
       setIsLoading(true);
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/option/?page=${paginationModel.page}&pageSize=${paginationModel.pageSize}&sortField=${sort.field}&sort=${sort.sortType}&search=${search}`,
+          `${process.env.REACT_APP_BASE_URL}/pollOption/?page=${paginationModel.page}&pageSize=${paginationModel.pageSize}&sortField=${sort.field}&sort=${sort.sortType}&search=${search}`,
           {
             headers,
           }
@@ -60,7 +60,7 @@ const PollOptions = () => {
     },
     {
       field: "name",
-      headerName: "Poll Name",
+      headerName: "Name",
       flex: 1,
     },
     {
@@ -69,13 +69,18 @@ const PollOptions = () => {
       flex: 1.5,
     },
     {
-      field: "pollId",
-      headerName: "Poll ID",
+      field: "pollName",
+      headerName: "Poll Name",
       flex: 1,
     },
     {
       field: "createdAt",
       headerName: "CreatedAt",
+      flex: 1,
+    },
+    {
+      field: "updatedAt",
+      headerName: "UpdatedAt",
       flex: 1,
     },
     {
@@ -94,18 +99,18 @@ const PollOptions = () => {
           setIsLoading(true);
           try {
             await axios.delete(
-              `${process.env.REACT_APP_BASE_URL}/option/${params.id}`,
+              `${process.env.REACT_APP_BASE_URL}/pollOption/${params.id}`,
               {
                 headers,
               }
             );
             // Filter out the deleted user from the current data state
-            const updatedData = data.polls.filter(
+            const updatedData = data.pollOptions.filter(
               (user) => user._id !== params.id
             );
             setData((prevState) => ({
               ...prevState,
-              polls: updatedData,
+              pollOptions: updatedData,
               total: prevState.total - 1,
             }));
           } catch (err) {
@@ -153,7 +158,7 @@ const PollOptions = () => {
           <DataGrid
             loading={isLoading}
             getRowId={(row) => row._id}
-            rows={(data && data.polls) || []}
+            rows={(data && data.pollOptions) || []}
             columns={columns}
             rowCount={(data && data.total) || 0}
             pageSizeOptions={[20, 50, 100]}

@@ -8,7 +8,7 @@ import Layout from "scenes/layout/Layout";
 import CreateEditUser from "scenes/createEditUser/CreateEditUser";
 import Polls from "scenes/polls/Polls";
 import CreateEditPoll from "scenes/createEditPoll/CreateEditPoll";
-import CreateEditOption from "scenes/createEditOption/CreateEditOption";
+import CreateEditPollOption from "scenes/createEditPollOption/CreateEditPollOption";
 import PollOptions from "scenes/pollOptions/PollOptions";
 
 function App() {
@@ -46,7 +46,7 @@ function App() {
             />
             <Route
               path="/option/:id?"
-              element={!!isAuth ? <CreateEditOption /> : <Navigate to="/" />}
+              element={!!isAuth ? <CreateEditPollOption /> : <Navigate to="/" />}
             />
           </Route>
         </Routes>

@@ -1,14 +1,14 @@
-import CreateEditOptionForm from "components/forms/createEditOptionForm/CreateEditOptionForm";
+import CreateEditPollOptionForm from "components/forms/createEditPollOptionForm/CreateEditPollOptionForm";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import "./CreateEditOption.css";
+import "./CreateEditPollOption.css";
 
-const CreateEditOption = () => {
+const CreateEditPollOption = () => {
   const { id } = useParams();
   const token = useSelector((state) => state.auth.token);
   return (
     <div className="create-edit-option-container">
-      <CreateEditOptionForm
+      <CreateEditPollOptionForm
         isEdit={!!id}
         token={token}
         optionId={id}
@@ -18,4 +18,4 @@ const CreateEditOption = () => {
   );
 };
 
-export default CreateEditOption;
+export default CreateEditPollOption;

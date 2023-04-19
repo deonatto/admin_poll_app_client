@@ -19,7 +19,12 @@ import { colorTokens } from "theme";
  * @param {string} btnName - Label for the form submission button.
  */
 
-const CreateEditOptionForm = ({ isEdit = false, token, optionId, btnName }) => {
+const CreateEditPollOptionForm = ({
+  isEdit = false,
+  token,
+  optionId,
+  btnName,
+}) => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [credentials, setCredentials] = useState({
@@ -37,7 +42,7 @@ const CreateEditOptionForm = ({ isEdit = false, token, optionId, btnName }) => {
     const getPollOption = async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/pollOptions/${optionId}`,
+          `${process.env.REACT_APP_BASE_URL}/pollOption/${optionId}`,
           {
             headers,
           }
@@ -75,6 +80,7 @@ const CreateEditOptionForm = ({ isEdit = false, token, optionId, btnName }) => {
     };
     getAllPolls();
   }, [headers]);
+
   const changeHandler = (credentialName, e) => {
     setCredentials((prevCredentials) => ({
       ...prevCredentials,
@@ -86,8 +92,8 @@ const CreateEditOptionForm = ({ isEdit = false, token, optionId, btnName }) => {
     try {
       let res;
       const link = isEdit
-        ? `${process.env.REACT_APP_BASE_URL}/pollOptions/${optionId}`
-        : `${process.env.REACT_APP_BASE_URL}/pollOptions`;
+        ? `${process.env.REACT_APP_BASE_URL}/pollOption/${optionId}`
+        : `${process.env.REACT_APP_BASE_URL}/pollOption`;
       if (isEdit) {
         //check if password are empty, if they are, send credentials without passwords
         res = await axios.put(link, credentials, {
@@ -183,20 +189,22 @@ const CreateEditOptionForm = ({ isEdit = false, token, optionId, btnName }) => {
         />
         <FormControl fullWidth>
           <InputLabel id="select-label">Poll ID</InputLabel>
-          <Select
-            placeholder="Select a poll"
-            labelId="select-label"
-            id="simple-select"
-            label="Poll ID"
-            value={credentials.pollId}
-            onChange={(e) => changeHandler("pollId", e)}
-          >
-            {polls.map((poll, index) => (
-              <MenuItem key={index} value={poll._id}>
-                {poll.name}
-              </MenuItem>
-            ))}
-          </Select>
+          {polls.length > 0 && (
+            <Select
+              placeholder="Select a poll"
+              labelId="select-label"
+              id="simple-select"
+              label="Poll ID"
+              value={credentials.pollId}
+              onChange={(e) => changeHandler("pollId", e)}
+            >
+              {polls.map((poll, index) => (
+                <MenuItem key={index} value={poll._id}>
+                  {poll.name}
+                </MenuItem>
+              ))}
+            </Select>
+          )}
         </FormControl>
         <div>
           <Button
@@ -223,4 +231,4 @@ const CreateEditOptionForm = ({ isEdit = false, token, optionId, btnName }) => {
   );
 };
 
-export default CreateEditOptionForm;
+export default CreateEditPollOptionForm;
