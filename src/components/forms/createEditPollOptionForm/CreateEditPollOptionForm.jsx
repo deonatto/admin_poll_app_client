@@ -9,6 +9,7 @@ import {
   InputLabel,
 } from "@mui/material";
 import { colorTokens } from "theme";
+import Message from "components/message/Message";
 
 /**
  * CreateEditPollForm Component
@@ -106,12 +107,13 @@ const CreateEditPollOptionForm = ({
         });
         resetCredentials();
       }
-
+      console.log(res);
       setMessage(res.data.message);
       setTimeout(() => {
         setMessage("");
       }, "3000");
     } catch (err) {
+      console.log(err);
       setError(err.response.data.message);
       setTimeout(() => {
         setError("");
@@ -151,45 +153,43 @@ const CreateEditPollOptionForm = ({
   };
 
   return (
-    <form className="create-edit-form-container">
-      {error && <h3 style={{ color: "red", textAlign: "center" }}>{error}</h3>}
+    <div>
+      {error && <Message color="red" message={error} />}
       {message && (
-        <h3 style={{ color: colorTokens.primary[500], textAlign: "center" }}>
-          {message}
-        </h3>
+        <Message color={colorTokens.primary[500]} message={message} />
       )}
-      {!isEdit && (
-        <h3 style={{ textDecoration: "none", textAlign: "center" }}>
-          Welcome, create a Poll Option.
-        </h3>
-      )}
-      <div className="create-edit-container">
-        <TextField
-          error={credentials.name ? !nameIsValid(credentials.name) : false}
-          required
-          label="Name"
-          value={credentials.name}
-          onChange={(e) => changeHandler("name", e)}
-          sx={{
-            flex: 1,
-          }}
-        />
-        <TextField
-          error={
-            credentials.description
-              ? !descriptionIsValid(credentials.description)
-              : false
-          }
-          multiline
-          rows={4}
-          required
-          label="Description"
-          value={credentials.description}
-          onChange={(e) => changeHandler("description", e)}
-        />
-        <FormControl fullWidth>
-          <InputLabel id="select-label">Poll ID</InputLabel>
-          {polls.length > 0 && (
+      <form className="create-edit-form-container">
+        {!isEdit && (
+          <h3 style={{ textDecoration: "none", textAlign: "center" }}>
+            Welcome, create a Poll Option.
+          </h3>
+        )}
+        <div className="create-edit-container">
+          <TextField
+            error={credentials.name ? !nameIsValid(credentials.name) : false}
+            required
+            label="Name"
+            value={credentials.name}
+            onChange={(e) => changeHandler("name", e)}
+            sx={{
+              flex: 1,
+            }}
+          />
+          <TextField
+            error={
+              credentials.description
+                ? !descriptionIsValid(credentials.description)
+                : false
+            }
+            multiline
+            rows={4}
+            required
+            label="Description"
+            value={credentials.description}
+            onChange={(e) => changeHandler("description", e)}
+          />
+          <FormControl fullWidth>
+            <InputLabel id="select-label">Poll ID</InputLabel>
             <Select
               placeholder="Select a poll"
               labelId="select-label"
@@ -204,30 +204,30 @@ const CreateEditPollOptionForm = ({
                 </MenuItem>
               ))}
             </Select>
-          )}
-        </FormControl>
-        <div>
-          <Button
-            fullWidth
-            onClick={submitHandler}
-            sx={{
-              fontWeight: "bold",
-              margin: "10px 0",
-              padding: "1rem",
-              backgroundColor: colorTokens.primary[500],
-              color: colorTokens.grey[0],
-              "&:hover": {
+          </FormControl>
+          <div>
+            <Button
+              fullWidth
+              onClick={submitHandler}
+              sx={{
+                fontWeight: "bold",
+                margin: "10px 0",
+                padding: "1rem",
                 backgroundColor: colorTokens.primary[500],
                 color: colorTokens.grey[0],
-              },
-            }}
-            disabled={buttonIsDisabled()}
-          >
-            {btnName}
-          </Button>
+                "&:hover": {
+                  backgroundColor: colorTokens.primary[500],
+                  color: colorTokens.grey[0],
+                },
+              }}
+              disabled={buttonIsDisabled()}
+            >
+              {btnName}
+            </Button>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 };
 

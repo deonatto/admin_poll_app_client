@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import "./CreateEditPollForm.css";
 import { colorTokens } from "theme";
+import Message from "components/message/Message";
 
 /**
  * CreateEditPollForm Component
@@ -128,77 +129,85 @@ const CreateEditPollForm = ({ isEdit = false, token, pollId, btnName }) => {
   };
 
   return (
-    <form className="create-edit-form-container">
-      {error && <h3 style={{ color: "red", textAlign: "center" }}>{error}</h3>}
+    <div>
+      {error && <Message color="red" message={error} />}
       {message && (
-        <h3 style={{ color: colorTokens.primary[500], textAlign: "center" }}>
-          {message}
-        </h3>
+        <Message color={colorTokens.primary[500]} message={message} />
       )}
-      {!isEdit && (
-        <h3 style={{ textDecoration: "none", textAlign: "center" }}>
-          Welcome, create a Poll.
-        </h3>
-      )}
-      <div className="create-edit-container">
-        <TextField
-          error={credentials.name ? !nameIsValid(credentials.name) : false}
-          required
-          label="Poll Name"
-          value={credentials.name}
-          onChange={(e) => changeHandler("name", e)}
-          sx={{
-            flex: 1,
-          }}
-        />
-        <TextField
-          error={
-            credentials.description
-              ? !descriptionIsValid(credentials.description)
-              : false
-          }
-          multiline
-          rows={4}
-          required
-          label="Description"
-          value={credentials.description}
-          onChange={(e) => changeHandler("description", e)}
-        />
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Active</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            label="Active"
-            value={credentials.active}
-            onChange={(e) => changeHandler("active", e)}
-          >
-            <MenuItem value={true}>YES</MenuItem>
-            <MenuItem value={false}>NO</MenuItem>
-          </Select>
-        </FormControl>
-        <div>
-          <Button
-            fullWidth
-            onClick={submitHandler}
+      <form className="create-edit-form-container">
+        {error && (
+          <h3 style={{ color: "red", textAlign: "center" }}>{error}</h3>
+        )}
+        {message && (
+          <h3 style={{ color: colorTokens.primary[500], textAlign: "center" }}>
+            {message}
+          </h3>
+        )}
+        {!isEdit && (
+          <h3 style={{ textDecoration: "none", textAlign: "center" }}>
+            Welcome, create a Poll.
+          </h3>
+        )}
+        <div className="create-edit-container">
+          <TextField
+            error={credentials.name ? !nameIsValid(credentials.name) : false}
+            required
+            label="Poll Name"
+            value={credentials.name}
+            onChange={(e) => changeHandler("name", e)}
             sx={{
-              fontWeight: "bold",
-              margin: "10px 0",
-              padding: "1rem",
-              backgroundColor: colorTokens.primary[500],
-              color: colorTokens.grey[0],
-              "&:hover": {
+              flex: 1,
+            }}
+          />
+          <TextField
+            error={
+              credentials.description
+                ? !descriptionIsValid(credentials.description)
+                : false
+            }
+            multiline
+            rows={4}
+            required
+            label="Description"
+            value={credentials.description}
+            onChange={(e) => changeHandler("description", e)}
+          />
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Active</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label="Active"
+              value={credentials.active}
+              onChange={(e) => changeHandler("active", e)}
+            >
+              <MenuItem value={true}>YES</MenuItem>
+              <MenuItem value={false}>NO</MenuItem>
+            </Select>
+          </FormControl>
+          <div>
+            <Button
+              fullWidth
+              onClick={submitHandler}
+              sx={{
+                fontWeight: "bold",
+                margin: "10px 0",
+                padding: "1rem",
                 backgroundColor: colorTokens.primary[500],
                 color: colorTokens.grey[0],
-              },
-            }}
-            disabled={buttonIsDisabled()}
-          >
-            {btnName}
-          </Button>
+                "&:hover": {
+                  backgroundColor: colorTokens.primary[500],
+                  color: colorTokens.grey[0],
+                },
+              }}
+              disabled={buttonIsDisabled()}
+            >
+              {btnName}
+            </Button>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 };
 

@@ -5,10 +5,11 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Toolbar from "components/toolbar/Toolbar";
 import { colorTokens } from "theme";
-import ErrorMessage from "components/errorMessage/ErrorMessage";
+import Message from "components/message/Message";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Header from "components/header/Header";
 
 const PollOptions = () => {
   const token = useSelector((state) => state.auth.token);
@@ -90,7 +91,6 @@ const PollOptions = () => {
       sortable: false,
       minWidth: 100,
       renderCell: (params) => {
-
         const editHandler = () => {
           navigate(`/option/${params.id}`);
         };
@@ -151,8 +151,9 @@ const PollOptions = () => {
   };
   return (
     <div style={{ padding: "1rem 1rem" }}>
+      <Header title="Poll Options" subTitle="Management of all Poll Options" />
       {error ? (
-        <ErrorMessage message={error} />
+        <Message color="red" message={error} />
       ) : (
         <div style={{ marginTop: "40px", height: "80vh" }}>
           <DataGrid

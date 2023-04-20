@@ -16,6 +16,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { colorTokens } from "theme";
 import { setLogin } from "state/auth";
 import "./LoginForm.css";
+import Message from "components/message/Message";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -65,69 +66,71 @@ const LoginForm = () => {
     return password.length > 5;
   };
   return (
-    <form className="login-form-container">
-      {error && <h3 style={{ color: "red", textAlign: "center" }}>{error}</h3>}
-      <h4 style={{ textDecoration: "none" }}>
-        Login into your account and start creating poll events.
-      </h4>
-      <div className="login-container">
-        <TextField
-          error={credentials.email ? !emailIsValid(credentials.email) : false}
-          required
-          label="Email"
-          value={credentials.email}
-          onChange={(e) => changeHandler("email", e)}
-        />
-        <FormControl variant="outlined">
-          <InputLabel required htmlFor="outlined-adornment-password">
-            Password
-          </InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-password"
-            type={showPassword ? "text" : "password"}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={() => setShowPassword(!showPassword)}
-                  edge="end"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-            onChange={(e) => changeHandler("password", e)}
-            value={credentials.password}
-            error={
-              credentials.password
-                ? !passwordIsValid(credentials.password)
-                : false
-            }
-            label="Password"
+    <div>
+      {error && <Message color="red" message={error} />}
+      <form className="login-form-container">
+        <h4 style={{ textDecoration: "none" }}>
+          Login into your account and start creating poll events.
+        </h4>
+        <div className="login-container">
+          <TextField
+            error={credentials.email ? !emailIsValid(credentials.email) : false}
+            required
+            label="Email"
+            value={credentials.email}
+            onChange={(e) => changeHandler("email", e)}
           />
-        </FormControl>
-        <div>
-          <Button
-            fullWidth
-            onClick={handleSubmit}
-            sx={{
-              fontWeight: "bold",
-              margin: "10px 0",
-              padding: "1rem",
-              backgroundColor: colorTokens.primary[500],
-              color: colorTokens.grey[0],
-              "&:hover": {
+          <FormControl variant="outlined">
+            <InputLabel required htmlFor="outlined-adornment-password">
+              Password
+            </InputLabel>
+            <OutlinedInput
+              id="outlined-adornment-password"
+              type={showPassword ? "text" : "password"}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              onChange={(e) => changeHandler("password", e)}
+              value={credentials.password}
+              error={
+                credentials.password
+                  ? !passwordIsValid(credentials.password)
+                  : false
+              }
+              label="Password"
+            />
+          </FormControl>
+          <div>
+            <Button
+              fullWidth
+              onClick={handleSubmit}
+              sx={{
+                fontWeight: "bold",
+                margin: "10px 0",
+                padding: "1rem",
                 backgroundColor: colorTokens.primary[500],
                 color: colorTokens.grey[0],
-              },
-            }}
-            disabled={buttonIsDisabled()}
-          >
-            Login
-          </Button>
+                "&:hover": {
+                  backgroundColor: colorTokens.primary[500],
+                  color: colorTokens.grey[0],
+                },
+              }}
+              disabled={buttonIsDisabled()}
+            >
+              Login
+            </Button>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 };
 
