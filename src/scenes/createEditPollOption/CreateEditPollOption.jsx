@@ -6,6 +6,7 @@ import "./CreateEditPollOption.css";
 const CreateEditPollOption = () => {
   const { id } = useParams();
   const token = useSelector((state) => state.auth.token);
+
   return (
     <div className="create-edit-option-container">
       <CreateEditPollOptionForm

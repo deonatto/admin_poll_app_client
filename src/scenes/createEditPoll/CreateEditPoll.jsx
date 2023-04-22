@@ -6,6 +6,7 @@ import "./CreateEditPoll.css";
 const CreateEditPoll = () => {
   const { id } = useParams();
   const token = useSelector((state) => state.auth.token);
+
   return (
     <div className="create-edit-poll-container">
       <CreateEditPollForm

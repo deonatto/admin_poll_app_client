@@ -2,6 +2,13 @@ import React from "react";
 import { colorTokens } from "theme";
 import "./Header.css";
 
+/**
+ * Header Component
+ *
+ * @param {string} title - Label for title.
+ * @param {string} subTitle - Label for subtitle.
+ */
+
 const Header = ({ title, subTitle }) => {
   return (
     <div>

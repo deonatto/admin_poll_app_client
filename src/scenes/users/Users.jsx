@@ -51,6 +51,7 @@ const Home = () => {
     };
     getAllUsers();
   }, [paginationModel, sort, search, token, headers]);
+
   // Defining table columns
   const columns = [
     {
@@ -132,6 +133,7 @@ const Home = () => {
       },
     },
   ];
+
   // Handler function for sorting
   const sortHandler = (sortModel) => {
     if (sortModel.length > 0) {
@@ -148,6 +150,7 @@ const Home = () => {
       }));
     }
   };
+
   return (
     <div style={{ padding: "1rem 1rem" }}>
       <Header title="Users" subTitle="Management of all accounts" />

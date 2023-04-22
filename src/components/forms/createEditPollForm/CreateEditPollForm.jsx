@@ -11,17 +11,18 @@ import {
 import "./CreateEditPollForm.css";
 import { colorTokens } from "theme";
 import Message from "components/message/Message";
-
+import ClipLoader from "react-spinners/ClipLoader";
 /**
  * CreateEditPollForm Component
  *
  * @param {bool} isEdit - Determines if the form is in edit mode.
  * @param {string} token - JWT token for authentication.
- * @param {string} pollId - User ID for editing user details.
+ * @param {string} pollId - Poll ID for editing poll details.
  * @param {string} btnName - Label for the form submission button.
  */
 
 const CreateEditPollForm = ({ isEdit = false, token, pollId, btnName }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [credentials, setCredentials] = useState({
@@ -36,6 +37,7 @@ const CreateEditPollForm = ({ isEdit = false, token, pollId, btnName }) => {
   // Fetch user details from API  for editing
   useEffect(() => {
     const getPoll = async () => {
+      setIsLoading(true);
       try {
         const res = await axios.get(
           `${process.env.REACT_APP_BASE_URL}/poll/${pollId}`,
@@ -52,6 +54,8 @@ const CreateEditPollForm = ({ isEdit = false, token, pollId, btnName }) => {
         setTimeout(() => {
           setError("");
         }, "3000");
+      } finally {
+        setIsLoading(false);
       }
     };
     if (isEdit) {
@@ -134,79 +138,85 @@ const CreateEditPollForm = ({ isEdit = false, token, pollId, btnName }) => {
       {message && (
         <Message color={colorTokens.primary[500]} message={message} />
       )}
-      <form className="create-edit-form-container">
-        {error && (
-          <h3 style={{ color: "red", textAlign: "center" }}>{error}</h3>
-        )}
-        {message && (
-          <h3 style={{ color: colorTokens.primary[500], textAlign: "center" }}>
-            {message}
-          </h3>
-        )}
-        {!isEdit && (
-          <h3 style={{ textDecoration: "none", textAlign: "center" }}>
-            Welcome, create a Poll.
-          </h3>
-        )}
-        <div className="create-edit-container">
-          <TextField
-            error={credentials.name ? !nameIsValid(credentials.name) : false}
-            required
-            label="Poll Name"
-            value={credentials.name}
-            onChange={(e) => changeHandler("name", e)}
-            sx={{
-              flex: 1,
-            }}
-          />
-          <TextField
-            error={
-              credentials.description
-                ? !descriptionIsValid(credentials.description)
-                : false
-            }
-            multiline
-            rows={4}
-            required
-            label="Description"
-            value={credentials.description}
-            onChange={(e) => changeHandler("description", e)}
-          />
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Active</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="Active"
-              value={credentials.active}
-              onChange={(e) => changeHandler("active", e)}
-            >
-              <MenuItem value={true}>YES</MenuItem>
-              <MenuItem value={false}>NO</MenuItem>
-            </Select>
-          </FormControl>
-          <div>
-            <Button
-              fullWidth
-              onClick={submitHandler}
+      {isLoading ? (
+        <ClipLoader
+          color={"#ffffff"}
+          loading={isLoading}
+          cssOverride={{
+            display: "block",
+            margin: "0 auto",
+          }}
+          size={150}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
+      ) : (
+        <form className="create-edit-form-container">
+          {!isEdit && (
+            <h3 style={{ textDecoration: "none", textAlign: "center" }}>
+              Welcome, create a Poll.
+            </h3>
+          )}
+          <div className="create-edit-container">
+            <TextField
+              error={credentials.name ? !nameIsValid(credentials.name) : false}
+              required
+              label="Poll Name"
+              value={credentials.name}
+              onChange={(e) => changeHandler("name", e)}
               sx={{
-                fontWeight: "bold",
-                margin: "10px 0",
-                padding: "1rem",
-                backgroundColor: colorTokens.primary[500],
-                color: colorTokens.grey[0],
-                "&:hover": {
+                flex: 1,
+              }}
+            />
+            <TextField
+              error={
+                credentials.description
+                  ? !descriptionIsValid(credentials.description)
+                  : false
+              }
+              multiline
+              rows={4}
+              required
+              label="Description"
+              value={credentials.description}
+              onChange={(e) => changeHandler("description", e)}
+            />
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Active</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Active"
+                value={credentials.active}
+                onChange={(e) => changeHandler("active", e)}
+              >
+                <MenuItem value={true}>YES</MenuItem>
+                <MenuItem value={false}>NO</MenuItem>
+              </Select>
+            </FormControl>
+            <div>
+              <Button
+                fullWidth
+                onClick={submitHandler}
+                sx={{
+                  fontWeight: "bold",
+                  margin: "10px 0",
+                  padding: "1rem",
                   backgroundColor: colorTokens.primary[500],
                   color: colorTokens.grey[0],
-                },
-              }}
-              disabled={buttonIsDisabled()}
-            >
-              {btnName}
-            </Button>
+                  "&:hover": {
+                    backgroundColor: colorTokens.primary[500],
+                    color: colorTokens.grey[0],
+                  },
+                }}
+                disabled={buttonIsDisabled()}
+              >
+                {btnName}
+              </Button>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      )}
     </div>
   );
 };

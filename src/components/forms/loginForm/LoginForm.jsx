@@ -27,13 +27,15 @@ const LoginForm = () => {
     email: "",
     password: "",
   });
+
   const changeHandler = (credentialName, e) => {
     setCredentials((prevCredentials) => ({
       ...prevCredentials,
       [credentialName]: e.target.value,
     }));
   };
-  const handleSubmit = async () => {
+
+  const submitHandler = async () => {
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/auth/login`,
@@ -59,12 +61,15 @@ const LoginForm = () => {
       emailIsValid(credentials.email) && passwordIsValid(credentials.password)
     );
   };
+
   const emailIsValid = (email) => {
     return email.includes("@") && email.length > 8;
   };
+
   const passwordIsValid = (password) => {
     return password.length > 5;
   };
+
   return (
     <div>
       {error && <Message color="red" message={error} />}
@@ -111,7 +116,7 @@ const LoginForm = () => {
           <div>
             <Button
               fullWidth
-              onClick={handleSubmit}
+              onClick={submitHandler}
               sx={{
                 fontWeight: "bold",
                 margin: "10px 0",

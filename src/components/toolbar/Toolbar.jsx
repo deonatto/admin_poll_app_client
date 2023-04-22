@@ -10,6 +10,17 @@ import {
 import { colorTokens } from "theme";
 import { useNavigate } from "react-router-dom";
 import "./Toolbar.css";
+
+
+/**
+ * A toolbar component with search functionality, export button, column button, density selector button, and an "Add" button to navigate to a new page to create a new item of the specified table type.
+ * @param {string} searchInput - The current value of the search input field.
+ * @param {function} setSearchInput - A function to update the value of the search input field.
+ * @param {function} setSearch - A function to perform the search with the input value and update the table.
+ * @param {string} tableType - The type of table being displayed.
+ * @param {string} searchLabel - The label to use for the search input field.
+ */
+
 const Toolbar = ({
   searchInput,
   setSearchInput,
@@ -18,6 +29,7 @@ const Toolbar = ({
   searchLabel,
 }) => {
   const navigate = useNavigate();
+
   return (
     <GridToolbarContainer>
       <div className="toolbar-container" style={{ width: "100%" }}>

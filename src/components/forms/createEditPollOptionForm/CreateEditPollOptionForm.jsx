@@ -10,13 +10,13 @@ import {
 } from "@mui/material";
 import { colorTokens } from "theme";
 import Message from "components/message/Message";
-
+import ClipLoader from "react-spinners/ClipLoader";
 /**
- * CreateEditPollForm Component
+ * CreateEditPollOptionForm Component
  *
  * @param {bool} isEdit - Determines if the form is in edit mode.
  * @param {string} token - JWT token for authentication.
- * @param {string} optionId - option ID for editing option details.
+ * @param {string} optionId - Poll Option ID for editing option details.
  * @param {string} btnName - Label for the form submission button.
  */
 
@@ -26,6 +26,7 @@ const CreateEditPollOptionForm = ({
   optionId,
   btnName,
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [credentials, setCredentials] = useState({
@@ -38,9 +39,10 @@ const CreateEditPollOptionForm = ({
     return { Authorization: `Bearer ${token}` };
   }, [token]);
 
-  // Fetch options details from API  for editing
+  // Fetch options details from API for editing
   useEffect(() => {
     const getPollOption = async () => {
+      setIsLoading(true);
       try {
         const res = await axios.get(
           `${process.env.REACT_APP_BASE_URL}/pollOption/${optionId}`,
@@ -57,6 +59,8 @@ const CreateEditPollOptionForm = ({
         setTimeout(() => {
           setError("");
         }, "3000");
+      } finally {
+        setIsLoading(false);
       }
     };
     if (isEdit) {
@@ -67,6 +71,7 @@ const CreateEditPollOptionForm = ({
   // Fetch all polls
   useEffect(() => {
     const getAllPolls = async () => {
+      setIsLoading(true);
       try {
         const res = await axios.get(
           `${process.env.REACT_APP_BASE_URL}/poll/all`,
@@ -77,6 +82,8 @@ const CreateEditPollOptionForm = ({
         setPolls(res.data);
       } catch (err) {
         setError(err.response ? err.response.data.message : err.message);
+      } finally {
+        setIsLoading(false);
       }
     };
     getAllPolls();
@@ -96,7 +103,6 @@ const CreateEditPollOptionForm = ({
         ? `${process.env.REACT_APP_BASE_URL}/pollOption/${optionId}`
         : `${process.env.REACT_APP_BASE_URL}/pollOption`;
       if (isEdit) {
-        //check if password are empty, if they are, send credentials without passwords
         res = await axios.put(link, credentials, {
           headers,
         });
@@ -107,13 +113,11 @@ const CreateEditPollOptionForm = ({
         });
         resetCredentials();
       }
-      console.log(res);
       setMessage(res.data.message);
       setTimeout(() => {
         setMessage("");
       }, "3000");
     } catch (err) {
-      console.log(err);
       setError(err.response.data.message);
       setTimeout(() => {
         setError("");
@@ -158,75 +162,89 @@ const CreateEditPollOptionForm = ({
       {message && (
         <Message color={colorTokens.primary[500]} message={message} />
       )}
-      <form className="create-edit-form-container">
-        {!isEdit && (
-          <h3 style={{ textDecoration: "none", textAlign: "center" }}>
-            Welcome, create a Poll Option.
-          </h3>
-        )}
-        <div className="create-edit-container">
-          <TextField
-            error={credentials.name ? !nameIsValid(credentials.name) : false}
-            required
-            label="Name"
-            value={credentials.name}
-            onChange={(e) => changeHandler("name", e)}
-            sx={{
-              flex: 1,
-            }}
-          />
-          <TextField
-            error={
-              credentials.description
-                ? !descriptionIsValid(credentials.description)
-                : false
-            }
-            multiline
-            rows={4}
-            required
-            label="Description"
-            value={credentials.description}
-            onChange={(e) => changeHandler("description", e)}
-          />
-          <FormControl fullWidth>
-            <InputLabel id="select-label">Poll ID</InputLabel>
-            <Select
-              placeholder="Select a poll"
-              labelId="select-label"
-              id="simple-select"
-              label="Poll ID"
-              value={credentials.pollId}
-              onChange={(e) => changeHandler("pollId", e)}
-            >
-              {polls.map((poll, index) => (
-                <MenuItem key={index} value={poll._id}>
-                  {poll.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <div>
-            <Button
-              fullWidth
-              onClick={submitHandler}
+      {isLoading ? (
+        <ClipLoader
+          color={"#ffffff"}
+          loading={isLoading}
+          cssOverride={{
+            display: "block",
+            margin: "0 auto",
+          }}
+          size={150}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
+      ) : (
+        <form className="create-edit-form-container">
+          {!isEdit && (
+            <h3 style={{ textDecoration: "none", textAlign: "center" }}>
+              Welcome, create a Poll Option.
+            </h3>
+          )}
+          <div className="create-edit-container">
+            <TextField
+              error={credentials.name ? !nameIsValid(credentials.name) : false}
+              required
+              label="Name"
+              value={credentials.name}
+              onChange={(e) => changeHandler("name", e)}
               sx={{
-                fontWeight: "bold",
-                margin: "10px 0",
-                padding: "1rem",
-                backgroundColor: colorTokens.primary[500],
-                color: colorTokens.grey[0],
-                "&:hover": {
+                flex: 1,
+              }}
+            />
+            <TextField
+              error={
+                credentials.description
+                  ? !descriptionIsValid(credentials.description)
+                  : false
+              }
+              multiline
+              rows={4}
+              required
+              label="Description"
+              value={credentials.description}
+              onChange={(e) => changeHandler("description", e)}
+            />
+            <FormControl fullWidth>
+              <InputLabel id="select-label">Poll ID</InputLabel>
+              <Select
+                placeholder="Select a poll"
+                labelId="select-label"
+                id="simple-select"
+                label="Poll ID"
+                value={credentials.pollId}
+                onChange={(e) => changeHandler("pollId", e)}
+              >
+                {polls.map((poll, index) => (
+                  <MenuItem key={index} value={poll._id}>
+                    {poll.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <div>
+              <Button
+                fullWidth
+                onClick={submitHandler}
+                sx={{
+                  fontWeight: "bold",
+                  margin: "10px 0",
+                  padding: "1rem",
                   backgroundColor: colorTokens.primary[500],
                   color: colorTokens.grey[0],
-                },
-              }}
-              disabled={buttonIsDisabled()}
-            >
-              {btnName}
-            </Button>
+                  "&:hover": {
+                    backgroundColor: colorTokens.primary[500],
+                    color: colorTokens.grey[0],
+                  },
+                }}
+                disabled={buttonIsDisabled()}
+              >
+                {btnName}
+              </Button>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      )}
     </div>
   );
 };

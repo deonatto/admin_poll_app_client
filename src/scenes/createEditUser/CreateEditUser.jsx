@@ -6,6 +6,7 @@ import "./CreateEditUser.css";
 const CreateEditUser = () => {
   const { id } = useParams();
   const token = useSelector((state) => state.auth.token);
+
   return (
     <div className="create-edit-user-container">
       <CreateEditUserForm

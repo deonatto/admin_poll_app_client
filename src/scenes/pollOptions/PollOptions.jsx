@@ -32,9 +32,9 @@ const PollOptions = () => {
     return { Authorization: `Bearer ${token}` };
   }, [token]);
 
-  // Fetch all polls
+  // Fetch all poll options
   useEffect(() => {
-    const getAllUsers = async () => {
+    const getAllPollOptions = async () => {
       setIsLoading(true);
       try {
         const res = await axios.get(
@@ -50,8 +50,9 @@ const PollOptions = () => {
         setIsLoading(false);
       }
     };
-    getAllUsers();
+    getAllPollOptions();
   }, [paginationModel, sort, search, token, headers]);
+
   // Defining table columns
   const columns = [
     {
@@ -133,6 +134,7 @@ const PollOptions = () => {
       },
     },
   ];
+
   // Handler function for sorting
   const sortHandler = (sortModel) => {
     if (sortModel.length > 0) {
@@ -149,6 +151,7 @@ const PollOptions = () => {
       }));
     }
   };
+
   return (
     <div style={{ padding: "1rem 1rem" }}>
       <Header title="Poll Options" subTitle="Management of all Poll Options" />

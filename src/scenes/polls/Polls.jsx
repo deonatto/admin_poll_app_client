@@ -52,6 +52,7 @@ const Polls = () => {
     };
     getAllPolls();
   }, [paginationModel, sort, search, token, headers]);
+
   // Defining table columns
   const columns = [
     {
@@ -128,6 +129,7 @@ const Polls = () => {
       },
     },
   ];
+
   // Handler function for sorting
   const sortHandler = (sortModel) => {
     if (sortModel.length > 0) {
@@ -144,6 +146,7 @@ const Polls = () => {
       }));
     }
   };
+  
   return (
     <div style={{ padding: "1rem 1rem" }}>
       <Header title="Polls" subTitle="Management of all Polls" />

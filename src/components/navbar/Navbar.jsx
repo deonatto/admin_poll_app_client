@@ -4,7 +4,7 @@ import {
   Menu as MenuIcon,
   ArrowDropDownOutlined,
   AccountCircleRounded,
-  SettingsOutlined
+  SettingsOutlined,
 } from "@mui/icons-material";
 import { Button, IconButton, Menu, MenuItem } from "@mui/material";
 import { colorTokens } from "theme";
@@ -16,9 +16,11 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => {
   const clickhandler = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const closeHandler = () => {
     setAnchorEl(null);
   };
+
   return (
     <div
       className="navbar-container"
@@ -31,7 +33,9 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => {
       </div>
       <div className="right-navbar">
         <IconButton>
-          <SettingsOutlined style={{ fontSize: "25px", color: colorTokens.grey[500] }} />
+          <SettingsOutlined
+            style={{ fontSize: "25px", color: colorTokens.grey[500] }}
+          />
         </IconButton>
         <div className="navbar-img-container">
           <Button
@@ -44,8 +48,12 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => {
               gap: "0.2rem",
             }}
           >
-            <AccountCircleRounded sx={{ fontSize: "50px", color: colorTokens.grey[400] }}/>
-            <ArrowDropDownOutlined sx={{ fontSize: "30px", color: colorTokens.grey[500] }} />
+            <AccountCircleRounded
+              sx={{ fontSize: "50px", color: colorTokens.grey[400] }}
+            />
+            <ArrowDropDownOutlined
+              sx={{ fontSize: "30px", color: colorTokens.grey[500] }}
+            />
           </Button>
           <Menu
             anchorEl={anchorEl}
