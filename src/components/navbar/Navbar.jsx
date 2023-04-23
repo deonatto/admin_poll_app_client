@@ -8,10 +8,12 @@ import {
 } from "@mui/icons-material";
 import { Button, IconButton, Menu, MenuItem } from "@mui/material";
 import { colorTokens } from "theme";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const isOpen = Boolean(anchorEl);
+  const navigate = useNavigate();
 
   const clickhandler = (event) => {
     setAnchorEl(event.currentTarget);
@@ -61,6 +63,7 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => {
             onClose={closeHandler}
             anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
           >
+            <MenuItem onClick={()=> navigate(`/profile`)}>Progile</MenuItem>
             <MenuItem onClick={closeHandler}>Log Out</MenuItem>
           </Menu>
         </div>
