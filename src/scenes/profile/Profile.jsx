@@ -9,6 +9,7 @@ import {
   InputAdornment,
   IconButton,
   InputLabel,
+  Alert,
 } from "@mui/material";
 import ClipLoader from "react-spinners/ClipLoader";
 import Visibility from "@mui/icons-material/Visibility";
@@ -23,6 +24,7 @@ const Profile = () => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const [isEditingPasswords, setIsEditingPasswords] = useState(false);
   const [repeatedPassword, setRepeatedPassword] = useState("");
@@ -61,12 +63,13 @@ const Profile = () => {
     const namesValidation =
       nameIsValid(credentials.firstName) &&
       nameIsValid(credentials.lastName) &&
-      emailIsValid(credentials.email);
+      emailIsValid(credentials.email) &&
+      passwordIsValid(credentials.password);
     if (isEditingPasswords) {
       return !(
         namesValidation &&
-        passwordIsValid(credentials.password) &&
-        credentials.password === repeatedPassword
+        passwordIsValid(credentials.newPassword) &&
+        credentials.newPassword === repeatedPassword
       );
     }
     return !namesValidation;
@@ -187,72 +190,87 @@ const Profile = () => {
                   label="Password"
                 />
               </FormControl>
-              <FormControl variant="outlined">
-                <InputLabel required htmlFor="outlined-adornment-password">
-                  New Password
-                </InputLabel>
-                <OutlinedInput
-                  id="outlined-adornment-password"
-                  type={showPassword ? "text" : "password"}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={() => setShowPassword(!showPassword)}
-                        edge="end"
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  onChange={(e) => changeHandler("newPassword", e)}
-                  value={credentials.newPassword}
-                  error={
-                    credentials.newPassword
-                      ? !passwordIsValid(credentials.newPassword)
-                      : false
-                  }
-                  label="Password"
-                />
-              </FormControl>
-              <FormControl variant="outlined">
-                <InputLabel
-                  required
-                  htmlFor="outlined-adornment-repeat-password"
-                >
-                  Repeat New Password
-                </InputLabel>
-                <OutlinedInput
-                  id="outlined-adornment-repeat-password"
-                  type={showRepeatPassword ? "text" : "password"}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={() =>
-                          setShowRepeatPassword(!showRepeatPassword)
-                        }
-                        edge="end"
-                      >
-                        {showRepeatPassword ? (
-                          <VisibilityOff />
-                        ) : (
-                          <Visibility />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  onChange={(e) => setRepeatedPassword(e.target.value)}
-                  error={
-                    repeatedPassword
-                      ? repeatedPassword !== credentials.newPassword
-                      : false
-                  }
-                  value={repeatedPassword}
-                  required
-                  label="Repeat Password"
-                />
-              </FormControl>
+              {isEditingPasswords && (
+                <React.Fragment>
+                  <Alert severity="error">
+                    Your password must meet the following requirements...
+                  </Alert>
+                  <FormControl variant="outlined">
+                    <InputLabel required htmlFor="outlined-adornment-password">
+                      New Password
+                    </InputLabel>
+                    <OutlinedInput
+                      id="outlined-adornment-password"
+                      type={showNewPassword ? "text" : "password"}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={() => setShowNewPassword(!showNewPassword)}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                      onChange={(e) => changeHandler("newPassword", e)}
+                      value={credentials.newPassword}
+                      error={
+                        credentials.newPassword
+                          ? !passwordIsValid(credentials.newPassword)
+                          : false
+                      }
+                      label="Password"
+                    />
+                  </FormControl>
+                </React.Fragment>
+              )}
+              {isEditingPasswords && (
+                <FormControl variant="outlined">
+                  <InputLabel
+                    required
+                    htmlFor="outlined-adornment-repeat-password"
+                  >
+                    Repeat New Password
+                  </InputLabel>
+                  <OutlinedInput
+                    id="outlined-adornment-repeat-password"
+                    type={showRepeatPassword ? "text" : "password"}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={() =>
+                            setShowRepeatPassword(!showRepeatPassword)
+                          }
+                          edge="end"
+                        >
+                          {showRepeatPassword ? (
+                            <VisibilityOff />
+                          ) : (
+                            <Visibility />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    onChange={(e) => setRepeatedPassword(e.target.value)}
+                    error={
+                      repeatedPassword
+                        ? repeatedPassword !== credentials.newPassword
+                        : false
+                    }
+                    value={repeatedPassword}
+                    required
+                    label="Repeat Password"
+                  />
+                </FormControl>
+              )}
+              <p
+                className="edit-passwords-msg"
+                onClick={() => setIsEditingPasswords(!isEditingPasswords)}
+              >
+                Update password ?
+              </p>
               <div>
                 <Button
                   fullWidth
