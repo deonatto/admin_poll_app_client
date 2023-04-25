@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import {
@@ -16,10 +16,12 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { colorTokens } from "theme";
 import Message from "components/message/Message";
+import { useParams } from "react-router-dom";
 import "./Profile.css";
 
 const Profile = () => {
-  const user = useSelector((state) => state.auth.user);
+  const { id } = useParams();
+  const token = useSelector((state) => state.auth.token);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -29,13 +31,44 @@ const Profile = () => {
   const [isEditingPasswords, setIsEditingPasswords] = useState(false);
   const [repeatedPassword, setRepeatedPassword] = useState("");
   const [credentials, setCredentials] = useState({
-    firstName: user.firstName,
-    lastName: user.lastName,
-    email: user.email,
-    role: user.role,
+    firstName: "",
+    lastName: "",
+    email: "",
+    role: "",
     password: "",
     newPassword: "",
   });
+  const headers = useMemo(() => {
+    return { Authorization: `Bearer ${token}` };
+  }, [token]);
+
+  // Fetch user details from API  for editing
+  useEffect(() => {
+    const getUser = async () => {
+      setIsLoading(true);
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_BASE_URL}/user/${id}`,
+          {
+            headers,
+          }
+        );
+        setCredentials((prevCredentials) => ({
+          ...prevCredentials,
+          ...res.data,
+        }));
+      } catch (err) {
+        setError(err.response.data.message);
+        setTimeout(() => {
+          setError("");
+        }, "3000");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getUser();
+  }, [token, id, headers]);
 
   const changeHandler = (credentialName, e) => {
     setCredentials((prevCredentials) => ({
@@ -45,9 +78,17 @@ const Profile = () => {
   };
 
   const submitHandler = async () => {
+    setIsLoading(true);
     try {
-      let res;
+      const res = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/user/profile/${id}`,
+        credentials,
+        {
+          headers,
+        }
+      );
       setMessage(res.data.message);
+      resetCredentials(res.data.user);
       setTimeout(() => {
         setMessage("");
       }, "3000");
@@ -56,6 +97,8 @@ const Profile = () => {
       setTimeout(() => {
         setError("");
       }, "3000");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -87,6 +130,17 @@ const Profile = () => {
 
   const passwordIsValid = (password) => {
     return password.length > 5;
+  };
+
+  const resetCredentials = (credentials) => {
+    setCredentials((prevState) => ({
+      ...prevState,
+      ...credentials,
+      password: "",
+      newPassword: "",
+    }));
+    setRepeatedPassword("");
+    isEditingPasswords && setIsEditingPasswords(!isEditingPasswords);
   };
 
   return (
@@ -192,15 +246,17 @@ const Profile = () => {
               </FormControl>
               {isEditingPasswords && (
                 <React.Fragment>
-                  <Alert severity="error">
-                    Your password must meet the following requirements...
-                  </Alert>
+                  {repeatedPassword &&
+                    repeatedPassword !== credentials.newPassword && (
+                      <Alert severity="error">Passwords do not match...</Alert>
+                    )
+                  }
                   <FormControl variant="outlined">
-                    <InputLabel required htmlFor="outlined-adornment-password">
+                    <InputLabel required htmlFor="outlined-adornment-newPassword">
                       New Password
                     </InputLabel>
                     <OutlinedInput
-                      id="outlined-adornment-password"
+                      id="outlined-adornment-newPassword"
                       type={showNewPassword ? "text" : "password"}
                       endAdornment={
                         <InputAdornment position="end">

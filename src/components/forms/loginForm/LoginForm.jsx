@@ -43,7 +43,7 @@ const LoginForm = () => {
       );
       dispatch(
         setLogin({
-          user: res.data.user,
+          userId: res.data.user._id,
           token: res.data.token,
         })
       );
