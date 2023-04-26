@@ -17,6 +17,7 @@ import { colorTokens } from "theme";
 import { setLogin } from "state/auth";
 import "./LoginForm.css";
 import Message from "components/message/Message";
+import { emailIsValid, passwordIsValid } from "utils/util";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -60,14 +61,6 @@ const LoginForm = () => {
     return !(
       emailIsValid(credentials.email) && passwordIsValid(credentials.password)
     );
-  };
-
-  const emailIsValid = (email) => {
-    return email.includes("@") && email.length > 8;
-  };
-
-  const passwordIsValid = (password) => {
-    return password.length > 5;
   };
 
   return (

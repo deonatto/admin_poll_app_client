@@ -12,6 +12,7 @@ import "./CreateEditPollForm.css";
 import { colorTokens } from "theme";
 import Message from "components/message/Message";
 import ClipLoader from "react-spinners/ClipLoader";
+import { nameIsValid, descriptionIsValid } from "utils/util";
 /**
  * CreateEditPollForm Component
  *
@@ -106,14 +107,6 @@ const CreateEditPollForm = ({ isEdit = false, token, pollId, btnName }) => {
       nameIsValid(credentials.name) &&
       descriptionIsValid(credentials.description);
     return !namesValidation;
-  };
-
-  const nameIsValid = (name) => {
-    return name.length >= 2;
-  };
-
-  const descriptionIsValid = (description) => {
-    return description.length >= 5;
   };
 
   const resetCredentials = (credentials = null) => {

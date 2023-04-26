@@ -8,6 +8,7 @@ import {
   InputAdornment,
   IconButton,
   InputLabel,
+  Alert,
 } from "@mui/material";
 import ClipLoader from "react-spinners/ClipLoader";
 import Visibility from "@mui/icons-material/Visibility";
@@ -15,6 +16,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import "./CreateEditUserForm.css";
 import { colorTokens } from "theme";
 import Message from "components/message/Message";
+import { nameIsValid, emailIsValid, passwordIsValid } from "utils/util";
 
 /**
  * CreateEditUserForm Component
@@ -139,20 +141,6 @@ const CreateEditUserForm = ({
     return !namesValidation;
   };
 
-  const nameIsValid = (name) => {
-    const regName = /\d/;
-    const hasNumbers = regName.test(name);
-    return !hasNumbers && name.length >= 2;
-  };
-
-  const emailIsValid = (email) => {
-    return email.includes("@") && email.length > 8;
-  };
-
-  const passwordIsValid = (password) => {
-    return password.length > 5;
-  };
-
   const resetCredentials = (credentials = null) => {
     if (credentials) {
       setCredentials((prevState) => ({
@@ -252,6 +240,9 @@ const CreateEditUserForm = ({
               label="Role"
               value={credentials.role}
             />
+            {repeatedPassword && repeatedPassword !== credentials.password && (
+              <Alert severity="error">Passwords do not match...</Alert>
+            )}
             {(!isEdit || isEditingPasswords) && (
               <FormControl variant="outlined">
                 <InputLabel required htmlFor="outlined-adornment-password">

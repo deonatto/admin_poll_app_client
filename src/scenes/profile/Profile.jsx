@@ -18,6 +18,7 @@ import { colorTokens } from "theme";
 import Message from "components/message/Message";
 import { useParams } from "react-router-dom";
 import "./Profile.css";
+import { nameIsValid, emailIsValid, passwordIsValid } from "utils/util";
 
 const Profile = () => {
   const { id } = useParams();
@@ -116,20 +117,6 @@ const Profile = () => {
       );
     }
     return !namesValidation;
-  };
-
-  const nameIsValid = (name) => {
-    const regName = /\d/;
-    const hasNumbers = regName.test(name);
-    return !hasNumbers && name.length >= 2;
-  };
-
-  const emailIsValid = (email) => {
-    return email.includes("@") && email.length > 8;
-  };
-
-  const passwordIsValid = (password) => {
-    return password.length > 5;
   };
 
   const resetCredentials = (credentials) => {
@@ -249,10 +236,12 @@ const Profile = () => {
                   {repeatedPassword &&
                     repeatedPassword !== credentials.newPassword && (
                       <Alert severity="error">Passwords do not match...</Alert>
-                    )
-                  }
+                    )}
                   <FormControl variant="outlined">
-                    <InputLabel required htmlFor="outlined-adornment-newPassword">
+                    <InputLabel
+                      required
+                      htmlFor="outlined-adornment-newPassword"
+                    >
                       New Password
                     </InputLabel>
                     <OutlinedInput
