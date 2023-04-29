@@ -10,6 +10,8 @@ export default function useUser(
   setError
 ) {
   useEffect(() => {
+    const CancelToken = axios.CancelToken;
+    const source = CancelToken.source();
     const getUser = async () => {
       setIsLoading(true);
       try {
@@ -17,6 +19,7 @@ export default function useUser(
           `${process.env.REACT_APP_BASE_URL}/user/${userId}`,
           {
             headers,
+            cancelToken: source.token,
           }
         );
         setCredentials((prevCredentials) => ({
@@ -35,5 +38,8 @@ export default function useUser(
     if (isEdit) {
       getUser();
     }
+    return () => {
+      source.cancel("Request canceled by user");
+    };
   }, [userId, headers, isEdit]);
 }
