@@ -17,6 +17,7 @@ import "./CreateEditUserForm.css";
 import { colorTokens } from "theme";
 import Message from "components/message/Message";
 import { nameIsValid, emailIsValid, passwordIsValid } from "utils/util";
+import FormWrapper from "components/UI/FormWrapper";
 
 /**
  * CreateEditUserForm Component
@@ -182,167 +183,149 @@ const CreateEditUserForm = ({
           data-testid="loader"
         />
       ) : (
-        <form className="create-edit-form-container">
-          {!isEdit && (
-            <h3 style={{ textDecoration: "none", textAlign: "center" }}>
-              Welcome, create an account.
-            </h3>
-          )}
-          <div className="create-edit-container">
-            <div
-              style={{
-                display: "flex",
-                gap: "0.5rem",
-                justifyContent: "space-between",
-              }}
-            >
-              <TextField
-                error={
-                  credentials.firstName
-                    ? !nameIsValid(credentials.firstName)
-                    : false
-                }
-                required
-                label="First Name"
-                value={credentials.firstName}
-                onChange={(e) => changeHandler("firstName", e)}
-                sx={{
-                  flex: 1,
-                }}
-              />
-              <TextField
-                error={
-                  credentials.lastName
-                    ? !nameIsValid(credentials.lastName)
-                    : false
-                }
-                required
-                label="Last Name"
-                value={credentials.lastName}
-                onChange={(e) => changeHandler("lastName", e)}
-                sx={{
-                  flex: 1,
-                }}
-              />
-            </div>
+        <FormWrapper message="Welcome, create an account." isEdit={isEdit}>
+          <div
+            style={{
+              display: "flex",
+              gap: "0.5rem",
+              justifyContent: "space-between",
+            }}
+          >
             <TextField
               error={
-                credentials.email ? !emailIsValid(credentials.email) : false
+                credentials.firstName
+                  ? !nameIsValid(credentials.firstName)
+                  : false
               }
               required
-              label="Email"
-              value={credentials.email}
-              onChange={(e) => changeHandler("email", e)}
+              label="First Name"
+              value={credentials.firstName}
+              onChange={(e) => changeHandler("firstName", e)}
+              sx={{
+                flex: 1,
+              }}
             />
             <TextField
-              disabled={true}
+              error={
+                credentials.lastName
+                  ? !nameIsValid(credentials.lastName)
+                  : false
+              }
               required
-              label="Role"
-              value={credentials.role}
+              label="Last Name"
+              value={credentials.lastName}
+              onChange={(e) => changeHandler("lastName", e)}
+              sx={{
+                flex: 1,
+              }}
             />
-            {repeatedPassword && repeatedPassword !== credentials.password && (
-              <Alert severity="error">Passwords do not match...</Alert>
-            )}
-            {(!isEdit || isEditingPasswords) && (
-              <FormControl variant="outlined">
-                <InputLabel required htmlFor="outlined-adornment-password">
-                  Password
-                </InputLabel>
-                <OutlinedInput
-                  id="outlined-adornment-password"
-                  type={showPassword ? "text" : "password"}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={() => setShowPassword(!showPassword)}
-                        edge="end"
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  onChange={(e) => changeHandler("password", e)}
-                  value={credentials.password}
-                  error={
-                    credentials.password
-                      ? !passwordIsValid(credentials.password)
-                      : false
-                  }
-                  label="Password"
-                />
-              </FormControl>
-            )}
-            {(!isEdit || isEditingPasswords) && (
-              <FormControl variant="outlined">
-                <InputLabel
-                  required
-                  htmlFor="outlined-adornment-repeat-password"
-                >
-                  Repeat Password
-                </InputLabel>
-                <OutlinedInput
-                  id="outlined-adornment-repeat-password"
-                  type={showRepeatPassword ? "text" : "password"}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={() =>
-                          setShowRepeatPassword(!showRepeatPassword)
-                        }
-                        edge="end"
-                      >
-                        {showRepeatPassword ? (
-                          <VisibilityOff />
-                        ) : (
-                          <Visibility />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  onChange={(e) => setRepeatedPassword(e.target.value)}
-                  error={
-                    repeatedPassword
-                      ? repeatedPassword !== credentials.password
-                      : false
-                  }
-                  value={repeatedPassword}
-                  required
-                  label="Repeat Password"
-                />
-              </FormControl>
-            )}
-            {isEdit && (
-              <p
-                className="edit-passwords-msg"
-                onClick={() => setIsEditingPasswords(!isEditingPasswords)}
-              >
-                Edit password ?
-              </p>
-            )}
-            <div>
-              <Button
-                fullWidth
-                onClick={submitHandler}
-                sx={{
-                  fontWeight: "bold",
-                  margin: "10px 0",
-                  padding: "1rem",
+          </div>
+          <TextField
+            error={credentials.email ? !emailIsValid(credentials.email) : false}
+            required
+            label="Email"
+            value={credentials.email}
+            onChange={(e) => changeHandler("email", e)}
+          />
+          <TextField
+            disabled={true}
+            required
+            label="Role"
+            value={credentials.role}
+          />
+          {repeatedPassword && repeatedPassword !== credentials.password && (
+            <Alert severity="error">Passwords do not match...</Alert>
+          )}
+          {(!isEdit || isEditingPasswords) && (
+            <FormControl variant="outlined">
+              <InputLabel required htmlFor="outlined-adornment-password">
+                Password
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                type={showPassword ? "text" : "password"}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => setShowPassword(!showPassword)}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                onChange={(e) => changeHandler("password", e)}
+                value={credentials.password}
+                error={
+                  credentials.password
+                    ? !passwordIsValid(credentials.password)
+                    : false
+                }
+                label="Password"
+              />
+            </FormControl>
+          )}
+          {(!isEdit || isEditingPasswords) && (
+            <FormControl variant="outlined">
+              <InputLabel required htmlFor="outlined-adornment-repeat-password">
+                Repeat Password
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-repeat-password"
+                type={showRepeatPassword ? "text" : "password"}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => setShowRepeatPassword(!showRepeatPassword)}
+                      edge="end"
+                    >
+                      {showRepeatPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                onChange={(e) => setRepeatedPassword(e.target.value)}
+                error={
+                  repeatedPassword
+                    ? repeatedPassword !== credentials.password
+                    : false
+                }
+                value={repeatedPassword}
+                required
+                label="Repeat Password"
+              />
+            </FormControl>
+          )}
+          {isEdit && (
+            <p
+              className="edit-passwords-msg"
+              onClick={() => setIsEditingPasswords(!isEditingPasswords)}
+            >
+              Edit password ?
+            </p>
+          )}
+          <div>
+            <Button
+              fullWidth
+              onClick={submitHandler}
+              sx={{
+                fontWeight: "bold",
+                margin: "10px 0",
+                padding: "1rem",
+                backgroundColor: colorTokens.primary[500],
+                color: colorTokens.grey[0],
+                "&:hover": {
                   backgroundColor: colorTokens.primary[500],
                   color: colorTokens.grey[0],
-                  "&:hover": {
-                    backgroundColor: colorTokens.primary[500],
-                    color: colorTokens.grey[0],
-                  },
-                }}
-                disabled={buttonIsDisabled()}
-              >
-                {btnName}
-              </Button>
-            </div>
+                },
+              }}
+              disabled={buttonIsDisabled()}
+            >
+              {btnName}
+            </Button>
           </div>
-        </form>
+        </FormWrapper>
       )}
     </div>
   );

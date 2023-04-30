@@ -12,6 +12,7 @@ import { colorTokens } from "theme";
 import Message from "components/message/Message";
 import ClipLoader from "react-spinners/ClipLoader";
 import { nameIsValid, descriptionIsValid } from "utils/util";
+import FormWrapper from "components/UI/FormWrapper";
 
 /**
  * CreateEditPollOptionForm Component
@@ -169,75 +170,68 @@ const CreateEditPollOptionForm = ({
           data-testid="loader"
         />
       ) : (
-        <form className="create-edit-form-container">
-          {!isEdit && (
-            <h3 style={{ textDecoration: "none", textAlign: "center" }}>
-              Welcome, create a Poll Option.
-            </h3>
-          )}
-          <div className="create-edit-container">
-            <TextField
-              error={credentials.name ? !nameIsValid(credentials.name) : false}
-              required
-              label="Name"
-              value={credentials.name}
-              onChange={(e) => changeHandler("name", e)}
+        <FormWrapper message="Welcome, create a Poll." isEdit={isEdit}>
+          <TextField
+            error={credentials.name ? !nameIsValid(credentials.name) : false}
+            required
+            label="Name"
+            value={credentials.name}
+            onChange={(e) => changeHandler("name", e)}
+            sx={{
+              flex: 1,
+            }}
+          />
+          <TextField
+            error={
+              credentials.description
+                ? !descriptionIsValid(credentials.description)
+                : false
+            }
+            multiline
+            rows={4}
+            required
+            label="Description"
+            value={credentials.description}
+            onChange={(e) => changeHandler("description", e)}
+          />
+          <FormControl fullWidth>
+            <InputLabel id="select-label">Poll ID</InputLabel>
+            <Select
+              placeholder="Select a poll"
+              labelId="select-label"
+              id="simple-select"
+              label="Poll ID"
+              value={credentials.pollId}
+              onChange={(e) => changeHandler("pollId", e)}
+            >
+              {polls.map((poll, index) => (
+                <MenuItem key={index} value={poll._id}>
+                  {poll.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <div>
+            <Button
+              fullWidth
+              onClick={submitHandler}
               sx={{
-                flex: 1,
-              }}
-            />
-            <TextField
-              error={
-                credentials.description
-                  ? !descriptionIsValid(credentials.description)
-                  : false
-              }
-              multiline
-              rows={4}
-              required
-              label="Description"
-              value={credentials.description}
-              onChange={(e) => changeHandler("description", e)}
-            />
-            <FormControl fullWidth>
-              <InputLabel id="select-label">Poll ID</InputLabel>
-              <Select
-                placeholder="Select a poll"
-                labelId="select-label"
-                id="simple-select"
-                label="Poll ID"
-                value={credentials.pollId}
-                onChange={(e) => changeHandler("pollId", e)}
-              >
-                {polls.map((poll, index) => (
-                  <MenuItem key={index} value={poll._id}>
-                    {poll.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <div>
-              <Button
-                fullWidth
-                onClick={submitHandler}
-                sx={{
-                  fontWeight: "bold",
-                  margin: "10px 0",
-                  padding: "1rem",
+                fontWeight: "bold",
+                margin: "10px 0",
+                padding: "1rem",
+                backgroundColor: colorTokens.primary[500],
+                color: colorTokens.grey[0],
+                "&:hover": {
                   backgroundColor: colorTokens.primary[500],
                   color: colorTokens.grey[0],
-                  "&:hover": {
-                    backgroundColor: colorTokens.primary[500],
-                    color: colorTokens.grey[0],
-                  },
-                }}
-                disabled={buttonIsDisabled()}
-              >
-                {btnName}
-              </Button>
-            </div>
+                },
+              }}
+              disabled={buttonIsDisabled()}
+            >
+              {btnName}
+            </Button>
           </div>
-        </form>
+        </FormWrapper>
       )}
     </div>
   );

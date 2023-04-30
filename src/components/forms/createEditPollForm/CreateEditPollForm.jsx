@@ -8,11 +8,11 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-import "./CreateEditPollForm.css";
 import { colorTokens } from "theme";
 import Message from "components/message/Message";
 import ClipLoader from "react-spinners/ClipLoader";
 import { nameIsValid, descriptionIsValid } from "utils/util";
+import FormWrapper from "components/UI/FormWrapper";
 /**
  * CreateEditPollForm Component
  *
@@ -144,71 +144,64 @@ const CreateEditPollForm = ({ isEdit = false, token, pollId, btnName }) => {
           data-testid="loader"
         />
       ) : (
-        <form className="create-edit-form-container">
-          {!isEdit && (
-            <h3 style={{ textDecoration: "none", textAlign: "center" }}>
-              Welcome, create a Poll.
-            </h3>
-          )}
-          <div className="create-edit-container">
-            <TextField
-              error={credentials.name ? !nameIsValid(credentials.name) : false}
-              required
-              label="Poll Name"
-              value={credentials.name}
-              onChange={(e) => changeHandler("name", e)}
+        <FormWrapper message="Welcome, create a Poll." isEdit={isEdit}>
+          <TextField
+            error={credentials.name ? !nameIsValid(credentials.name) : false}
+            required
+            label="Poll Name"
+            value={credentials.name}
+            onChange={(e) => changeHandler("name", e)}
+            sx={{
+              flex: 1,
+            }}
+          />
+          <TextField
+            error={
+              credentials.description
+                ? !descriptionIsValid(credentials.description)
+                : false
+            }
+            multiline
+            rows={4}
+            required
+            label="Description"
+            value={credentials.description}
+            onChange={(e) => changeHandler("description", e)}
+          />
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Active</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label="Active"
+              value={credentials.active}
+              onChange={(e) => changeHandler("active", e)}
+            >
+              <MenuItem value={true}>YES</MenuItem>
+              <MenuItem value={false}>NO</MenuItem>
+            </Select>
+          </FormControl>
+          <div>
+            <Button
+              fullWidth
+              onClick={submitHandler}
               sx={{
-                flex: 1,
-              }}
-            />
-            <TextField
-              error={
-                credentials.description
-                  ? !descriptionIsValid(credentials.description)
-                  : false
-              }
-              multiline
-              rows={4}
-              required
-              label="Description"
-              value={credentials.description}
-              onChange={(e) => changeHandler("description", e)}
-            />
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Active</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Active"
-                value={credentials.active}
-                onChange={(e) => changeHandler("active", e)}
-              >
-                <MenuItem value={true}>YES</MenuItem>
-                <MenuItem value={false}>NO</MenuItem>
-              </Select>
-            </FormControl>
-            <div>
-              <Button
-                fullWidth
-                onClick={submitHandler}
-                sx={{
-                  fontWeight: "bold",
-                  margin: "10px 0",
-                  padding: "1rem",
+                fontWeight: "bold",
+                margin: "10px 0",
+                padding: "1rem",
+                backgroundColor: colorTokens.primary[500],
+                color: colorTokens.grey[0],
+                "&:hover": {
                   backgroundColor: colorTokens.primary[500],
                   color: colorTokens.grey[0],
-                  "&:hover": {
-                    backgroundColor: colorTokens.primary[500],
-                    color: colorTokens.grey[0],
-                  },
-                }}
-                disabled={buttonIsDisabled()}
-              >
-                {btnName}
-              </Button>
-            </div>
+                },
+              }}
+              disabled={buttonIsDisabled()}
+            >
+              {btnName}
+            </Button>
           </div>
-        </form>
+        </FormWrapper>
       )}
     </div>
   );
