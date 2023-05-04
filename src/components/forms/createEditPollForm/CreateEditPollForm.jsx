@@ -64,6 +64,7 @@ const CreateEditPollForm = ({ isEdit = false, token, pollId, btnName }) => {
     }
   }, [isEdit, token, pollId, headers]);
 
+  //update the credentials state when user types in fields
   const changeHandler = (credentialName, e) => {
     setCredentials((prevCredentials) => ({
       ...prevCredentials,
@@ -71,6 +72,7 @@ const CreateEditPollForm = ({ isEdit = false, token, pollId, btnName }) => {
     }));
   };
 
+  //submit the poll's credentials to the server for authentication
   const submitHandler = async () => {
     try {
       let res;
@@ -102,6 +104,7 @@ const CreateEditPollForm = ({ isEdit = false, token, pollId, btnName }) => {
     }
   };
 
+  //determine if the button should be disabled or not
   const buttonIsDisabled = () => {
     const namesValidation =
       nameIsValid(credentials.name) &&

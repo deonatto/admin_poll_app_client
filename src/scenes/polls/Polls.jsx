@@ -12,6 +12,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Header from "components/header/Header";
 
 const Polls = () => {
+  // Selector for retrieving token from the auth state.
   const token = useSelector((state) => state.auth.token);
   const navigate = useNavigate();
   const [data, setData] = useState([]);

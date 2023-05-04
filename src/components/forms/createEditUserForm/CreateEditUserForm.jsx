@@ -83,6 +83,7 @@ const CreateEditUserForm = ({
     }
   }, [isEdit, token, userId, headers]);
 
+  //update the credentials state when user types in fields
   const changeHandler = (credentialName, e) => {
     setCredentials((prevCredentials) => ({
       ...prevCredentials,
@@ -90,6 +91,7 @@ const CreateEditUserForm = ({
     }));
   };
 
+  //submit the user's credentials to the server for authentication
   const submitHandler = async () => {
     try {
       let res;
@@ -127,6 +129,7 @@ const CreateEditUserForm = ({
     }
   };
 
+  //determine if the button should be disabled or not
   const buttonIsDisabled = () => {
     const namesValidation =
       nameIsValid(credentials.firstName) &&

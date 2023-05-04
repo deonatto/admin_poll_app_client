@@ -71,6 +71,7 @@ const Profile = () => {
     getUser();
   }, [token, id, headers]);
 
+   //update the credentials state when user types in fields
   const changeHandler = (credentialName, e) => {
     setCredentials((prevCredentials) => ({
       ...prevCredentials,
@@ -78,6 +79,7 @@ const Profile = () => {
     }));
   };
 
+  //submit the user's credentials to the server for authentication
   const submitHandler = async () => {
     setIsLoading(true);
     try {
@@ -103,6 +105,7 @@ const Profile = () => {
     }
   };
 
+  //determine if the button should be disabled or not
   const buttonIsDisabled = () => {
     const namesValidation =
       nameIsValid(credentials.firstName) &&

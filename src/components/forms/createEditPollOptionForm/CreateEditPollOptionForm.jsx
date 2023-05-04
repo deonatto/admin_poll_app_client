@@ -92,6 +92,7 @@ const CreateEditPollOptionForm = ({
     getAllPolls();
   }, [headers]);
 
+  //update the credentials state when user types in fields
   const changeHandler = (credentialName, e) => {
     setCredentials((prevCredentials) => ({
       ...prevCredentials,
@@ -99,6 +100,7 @@ const CreateEditPollOptionForm = ({
     }));
   };
 
+  //submit the credentials to the server for authentication
   const submitHandler = async () => {
     try {
       let res;
@@ -128,6 +130,7 @@ const CreateEditPollOptionForm = ({
     }
   };
 
+  //determine if the button should be disabled or not
   const buttonIsDisabled = () => {
     const namesValidation =
       nameIsValid(credentials.name) &&
